@@ -10,6 +10,6 @@ public class ChannelActivity extends SingleFragmentActivity {
 
     @Override
     public Fragment createFragment() {
-        return new MainFragment();
+        return new LoginFragment();
     }
 }

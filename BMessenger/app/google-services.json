@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "500096274264",
+    "firebase_url": "https://bmessenger-90bf7.firebaseio.com",
+    "project_id": "bmessenger-90bf7",
+    "storage_bucket": "bmessenger-90bf7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:500096274264:android:e5e6e77e87f06a56",
+        "android_client_info": {
+          "package_name": "com.bmessenger.bmessenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "500096274264-ravv1s69d4odnsnk50m7kcoa6qt997k8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bmessenger.bmessenger",
+            "certificate_hash": "72A91E9300D816F33544A3998A9A68482CB2B930"
+          }
+        },
+        {
+          "client_id": "500096274264-vhbj4c7r6jleh4a4griq6rebfrf6ls69.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClwU_dcqHCxM9koPVLdxjn4vzzxx1NWY0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "500096274264-vhbj4c7r6jleh4a4griq6rebfrf6ls69.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
