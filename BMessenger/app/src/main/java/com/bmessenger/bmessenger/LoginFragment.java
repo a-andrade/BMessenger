@@ -23,6 +23,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.w3c.dom.Text;
 
@@ -54,6 +55,29 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+        // If a notification message is tapped, any data accompanying the notification
+        // message is available in the intent extras. In this sample the launcher
+        // intent is fired when the notification is tapped, so any accompanying data would
+        // be handled here. If you want a different intent fired, set the click_action
+        // field of the notification message to the desired intent. The launcher intent
+        // is used when no click_action is specified.
+        //
+        // Handle possible data accompanying notification message.
+        // [START handle_data_extras]
+        if (getActivity().getIntent().getExtras() != null) {
+            for (String key : getActivity().getIntent().getExtras().keySet()) {
+                Object value = getActivity().getIntent().getExtras().get(key);
+                Log.d(TAG, "Key: " + key + " Value: " + value);
+            }
+        }
+        // [END handle_data_extras]
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
@@ -73,6 +97,18 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
+
+        if (getActivity().getIntent().getExtras() != null) {
+            for (String key : getActivity().getIntent().getExtras().keySet()) {
+                Object value = getActivity().getIntent().getExtras().get(key);
+                Log.d(TAG, "Key: " + key + " Value: " + value);
+            }
+        }
+
+
+        final String token = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "Token: " + token);
+        mView1.setText(token);
         // [END initialize_auth]
 
         // [START auth_state_listener]
@@ -224,8 +260,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         // Status text
         if (isSignedIn) {
-            mView1.setText(getString(R.string.id_fmt, user.getUid()));
-            mView2.setText(getString(R.string.email_fmt, user.getEmail()));
+//            mView1.setText(getString(R.string.id_fmt, user.getUid()));
+//            mView2.setText(getString(R.string.email_fmt, user.getEmail()));
         } else {
             mView1.setText(R.string.signed_out);
             mView2.setText(null);

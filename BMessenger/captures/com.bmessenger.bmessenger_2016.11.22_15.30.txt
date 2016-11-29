@@ -1,0 +1,114 @@
+Activity Resolver Table:
+  Non-Data Actions:
+      android.intent.action.MAIN:
+        e9c4e7b com.bmessenger.bmessenger/.LoginActivity filter 2abc995
+          Action: "android.intent.action.MAIN"
+          Category: "android.intent.category.LAUNCHER"
+          AutoVerify=false
+
+Receiver Resolver Table:
+  Non-Data Actions:
+      com.android.vending.INSTALL_REFERRER:
+        6991498 com.bmessenger.bmessenger/com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver filter ef6f54c
+          Action: "com.android.vending.INSTALL_REFERRER"
+          AutoVerify=false
+      com.google.android.c2dm.intent.RECEIVE:
+        90444f1 com.bmessenger.bmessenger/com.google.firebase.iid.FirebaseInstanceIdReceiver filter 2ff317f
+          Action: "com.google.android.c2dm.intent.RECEIVE"
+          Action: "com.google.android.c2dm.intent.REGISTRATION"
+          Category: "com.bmessenger.bmessenger"
+          AutoVerify=false
+      com.google.android.c2dm.intent.REGISTRATION:
+        90444f1 com.bmessenger.bmessenger/com.google.firebase.iid.FirebaseInstanceIdReceiver filter 2ff317f
+          Action: "com.google.android.c2dm.intent.RECEIVE"
+          Action: "com.google.android.c2dm.intent.REGISTRATION"
+          Category: "com.bmessenger.bmessenger"
+          AutoVerify=false
+
+Service Resolver Table:
+  Non-Data Actions:
+      com.google.firebase.INSTANCE_ID_EVENT:
+        738f8d6 com.bmessenger.bmessenger/com.google.firebase.iid.FirebaseInstanceIdService filter 45cc29e
+          Action: "com.google.firebase.INSTANCE_ID_EVENT"
+          mPriority=-500, mHasPartialTypes=false
+          AutoVerify=false
+      com.google.firebase.MESSAGING_EVENT:
+        a975757 com.bmessenger.bmessenger/com.google.firebase.messaging.FirebaseMessagingService filter 3e578d9
+          Action: "com.google.firebase.MESSAGING_EVENT"
+          mPriority=-500, mHasPartialTypes=false
+          AutoVerify=false
+
+Permissions:
+  Permission [com.bmessenger.bmessenger.permission.C2D_MESSAGE] (356e244):
+    sourcePackage=com.bmessenger.bmessenger
+    uid=10071 gids=null type=0 prot=signature
+    perm=Permission{9873f2d com.bmessenger.bmessenger.permission.C2D_MESSAGE}
+    packageSetting=PackageSetting{da3cc62 com.bmessenger.bmessenger/10071}
+
+Registered ContentProviders:
+  com.bmessenger.bmessenger/com.google.firebase.provider.FirebaseInitProvider:
+    Provider{cd011f3 com.bmessenger.bmessenger/com.google.firebase.provider.FirebaseInitProvider}
+
+ContentProvider Authorities:
+  [com.bmessenger.bmessenger.firebaseinitprovider]:
+    Provider{cd011f3 com.bmessenger.bmessenger/com.google.firebase.provider.FirebaseInitProvider}
+      applicationInfo=ApplicationInfo{f01deb0 com.bmessenger.bmessenger}
+
+Key Set Manager:
+  [com.bmessenger.bmessenger]
+      Signing KeySets: 12
+
+Packages:
+  Package [com.bmessenger.bmessenger] (da3cc62):
+    userId=10071
+    pkg=Package{b1e35dc com.bmessenger.bmessenger}
+    codePath=/data/app/com.bmessenger.bmessenger-1
+    resourcePath=/data/app/com.bmessenger.bmessenger-1
+    legacyNativeLibraryDir=/data/app/com.bmessenger.bmessenger-1/lib
+    primaryCpuAbi=null
+    secondaryCpuAbi=null
+    versionCode=1 minSdk=15 targetSdk=24
+    versionName=1.0
+    splits=[base]
+    apkSigningVersion=2
+    applicationInfo=ApplicationInfo{f01deb0 com.bmessenger.bmessenger}
+    flags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+    privateFlags=[ RESIZEABLE_ACTIVITIES ]
+    dataDir=/data/user/0/com.bmessenger.bmessenger
+    supportsScreens=[small, medium, large, xlarge, resizeable, anyDensity]
+    timeStamp=2016-11-22 14:56:19
+    firstInstallTime=2016-11-22 14:56:20
+    lastUpdateTime=2016-11-22 14:56:20
+    signatures=PackageSignatures{46e26e5 [a07d72c2]}
+    installPermissionsFixed=true installStatus=1
+    pkgFlags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]
+    declared permissions:
+      com.bmessenger.bmessenger.permission.C2D_MESSAGE: prot=signature, INSTALLED
+    requested permissions:
+      android.permission.INTERNET
+      android.permission.ACCESS_NETWORK_STATE
+      android.permission.WAKE_LOCK
+      com.google.android.c2dm.permission.RECEIVE
+      com.bmessenger.bmessenger.permission.C2D_MESSAGE
+    install permissions:
+      com.google.android.c2dm.permission.RECEIVE: granted=true
+      android.permission.INTERNET: granted=true
+      com.bmessenger.bmessenger.permission.C2D_MESSAGE: granted=true
+      android.permission.ACCESS_NETWORK_STATE: granted=true
+      android.permission.WAKE_LOCK: granted=true
+    User 0: ceDataInode=22338 installed=true hidden=false suspended=false stopped=false notLaunched=false enabled=0
+      gids=[3003]
+      runtime permissions:
+
+
+Dexopt state:
+  [com.bmessenger.bmessenger]
+    Instruction Set: x86
+      path: /data/app/com.bmessenger.bmessenger-1/base.apk
+      status: /data/app/com.bmessenger.bmessenger-1/oat/x86/base.odex [compilation_filter=interpret-only, status=kOatUpT
+      oDate]
+
+
+Compiler stats:
+  [com.bmessenger.bmessenger]
+     base.apk - 335

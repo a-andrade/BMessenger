@@ -12,12 +12,39 @@
     </item>
     <item
         is-multidex="true"
+        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.google.firebase\firebase-iid\9.8.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="6b6f292b8b951dcf2ecf2b20853e3eabc7d65c48">
+        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-iid-9.8.0_d8f35e7bb78c9c2d9db496e16b3435ff982197f2\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.google.firebase\firebase-auth\9.8.0\jars\classes.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.3"
         sha1="15e59454416c6341bd3ed2533b585cd340682dd1">
         <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-auth-9.8.0_3fb99afae044573f6c9cef95ecdf70f745a996ab\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="9c4c3bc902450c39ed54de170db4fb12aea20a35">
+        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-core-utils-24.2.1_a99023242ab35cf5acfd02d66f6ec498ee2354e8\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
+        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.2.1_397aced91def97813d39a0960c17e514419a73a0\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -57,6 +84,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="09b462bbcb77650284bd6614f1a32f360ef369f8">
+        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-media-compat-24.2.1_bb94fff1442385db32f52d78ddc285ce9be22cc2\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\24.2.1\jars\libs\internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
@@ -75,12 +111,66 @@
     </item>
     <item
         is-multidex="true"
+        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="43b2dba6b5a0b14527961b75329d0b90025f15ea">
+        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-24.2.1_3c2bcfc41efe7658018ca0ca524cb23e813f4375\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\support-fragment\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
+        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.2.1_1e42dd3e70e7522cf8324201d69bc9190e850aaa\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\support-compat\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
+        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.2.1_b814c7aadc2e7772bdf6e2d1d17b7dcbdc51561d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="bb821bae21a86c874fbba0963e4770c660e33677">
+        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_fb3e67070e0f43eab23a76070613e76ca7543cd9\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\24.2.1\jars\libs\internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.3"
         sha1="fbf8da429efd5ad21e02e3e5ecaa1efc4167878d">
         <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.2.1_630066b60a285393e61d34820b429c5eb5ff8f76\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.google.firebase\firebase-analytics\9.8.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="9ff04cc3470178a44512624036751a803418c2ca">
+        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-analytics-9.8.0_4f60e10ced3f47f8af585f7e5af9deda3a220a8d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.google.firebase\firebase-analytics-impl\9.8.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="190a642ba16d1421296a4d794606279b80039c59">
+        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-analytics-impl-9.8.0_5037467a1f910d19dbac57acd21bd7175f158efb\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -129,111 +219,21 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.google.firebase\firebase-auth-common\9.8.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="4438b1a7848a7c571122ba618aa1304514aabee6">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-auth-common-9.8.0_4530571df746fb783b4af9b65654cf4779fae776\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.google.firebase\firebase-iid\9.8.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="6b6f292b8b951dcf2ecf2b20853e3eabc7d65c48">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-iid-9.8.0_d8f35e7bb78c9c2d9db496e16b3435ff982197f2\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\24.2.1\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="9c4c3bc902450c39ed54de170db4fb12aea20a35">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-core-utils-24.2.1_a99023242ab35cf5acfd02d66f6ec498ee2354e8\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\24.2.1\jars\libs\internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.2.1_397aced91def97813d39a0960c17e514419a73a0\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\24.2.1\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="09b462bbcb77650284bd6614f1a32f360ef369f8">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-media-compat-24.2.1_bb94fff1442385db32f52d78ddc285ce9be22cc2\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\24.2.1\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="43b2dba6b5a0b14527961b75329d0b90025f15ea">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-24.2.1_3c2bcfc41efe7658018ca0ca524cb23e813f4375\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\support-fragment\24.2.1\jars\libs\internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.2.1_1e42dd3e70e7522cf8324201d69bc9190e850aaa\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\support-compat\24.2.1\jars\libs\internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.2.1_b814c7aadc2e7772bdf6e2d1d17b7dcbdc51561d\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="4a8624304029e4d4dde15725252337957cd9f7aa">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_fb3e67070e0f43eab23a76070613e76ca7543cd9\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.google.firebase\firebase-analytics\9.8.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="9ff04cc3470178a44512624036751a803418c2ca">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-analytics-9.8.0_4f60e10ced3f47f8af585f7e5af9deda3a220a8d\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.google.firebase\firebase-analytics-impl\9.8.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="190a642ba16d1421296a4d794606279b80039c59">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-analytics-impl-9.8.0_5037467a1f910d19dbac57acd21bd7175f158efb\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.android.support\support-compat\24.2.1\jars\classes.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.3"
         sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
         <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-compat-24.2.1_4682c98cba8a263626893c7b33f9cdcde8ff9517\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\exploded-aar\com.google.firebase\firebase-auth-common\9.8.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="4438b1a7848a7c571122ba618aa1304514aabee6">
+        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-auth-common-9.8.0_4530571df746fb783b4af9b65654cf4779fae776\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -250,7 +250,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.3"
-        sha1="ab021dceba707e3d733b9220c825467f58d2cc63">
+        sha1="50ee3bf4aa7cb807ed81790969cce2154fb182ca">
         <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_f76a9470afdf34acfce871a982493fef900dc3d5\classes.dex" />
     </item>
 
