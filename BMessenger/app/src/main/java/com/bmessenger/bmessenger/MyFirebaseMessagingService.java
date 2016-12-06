@@ -45,7 +45,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message received: " + message);
             Log.d(TAG, "User was: " + user);
 
-            showBasicNotification(message);
+            ChannelControl channelControl = ChannelControl.get(getApplication().getApplicationContext());
+            channelControl.onMessageReceived(user, message);
+            //showBasicNotification(message);
         }
 
         // Check if message contains a notification payload.

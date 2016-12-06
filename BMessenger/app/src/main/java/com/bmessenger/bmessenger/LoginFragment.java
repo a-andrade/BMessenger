@@ -35,14 +35,11 @@ import org.w3c.dom.Text;
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = "LoginFragment";
-    private TextView mView1;
-    private TextView mView2;
 
-    private EditText mEmailField;
+    private EditText mUsernameEditText;
     private EditText mPasswordField;
 
     private Button mRegisterButton;
-    private Button mAnonButton;
 
     private ProgressDialog mProgressDialog;
 
@@ -82,17 +79,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
-        mEmailField = (EditText) v.findViewById(R.id.username_editText);
-        mPasswordField = (EditText) v.findViewById(R.id.password_editText);
+        mUsernameEditText = (EditText) v.findViewById(R.id.username_EditText);
 
         mRegisterButton = (Button) v.findViewById(R.id.register_button);
-        mAnonButton = (Button) v.findViewById(R.id.anon_button);
 
-        mView1 = (TextView) v.findViewById(R.id.signedInView);
-        mView2 = (TextView) v.findViewById(R.id.userView);
 
         mRegisterButton.setOnClickListener(this);
-        mAnonButton.setOnClickListener(this);
 
 
         // [START initialize_auth]
@@ -108,7 +100,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         final String token = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Token: " + token);
-        mView1.setText(token);
+        //mView1.setText(token);
         // [END initialize_auth]
 
         // [START auth_state_listener]
@@ -119,7 +111,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    callNextActivity();
+                    //callNextActivity();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -181,6 +173,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     }
                 });
         // [END signin_anonymously]
+
     }
 
     private void signOut() {
@@ -195,7 +188,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }
 
         // Get email and password from form
-        String email = mEmailField.getText().toString();
+        String email = mUsernameEditText.getText().toString();
         String password = mPasswordField.getText().toString();
 
         // Create EmailAuthCredential with email and password
@@ -227,19 +220,19 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void callNextActivity() {
-        Intent i = new Intent(getActivity(), ChannelListActivity.class);
+        Intent i = new Intent(getActivity(), MessagingActivity.class);
         startActivity(i);
     }
 
     private boolean validateLinkForm() {
         boolean valid = true;
 
-        String email = mEmailField.getText().toString();
+        String email = mUsernameEditText.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            mEmailField.setError("Required.");
+            mUsernameEditText.setError("Required.");
             valid = false;
         } else {
-            mEmailField.setError(null);
+            mUsernameEditText.setError(null);
         }
 
         String password = mPasswordField.getText().toString();
@@ -263,8 +256,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 //            mView1.setText(getString(R.string.id_fmt, user.getUid()));
 //            mView2.setText(getString(R.string.email_fmt, user.getEmail()));
         } else {
-            mView1.setText(R.string.signed_out);
-            mView2.setText(null);
+            Log.d(TAG, "Signed Out");
         }
 
     }
@@ -272,10 +264,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.register_button) {
-            linkAccount();
-        } else if(i == R.id.anon_button) {
+        if(i == R.id.register_button) {
+            //if user is not signed in sign him in anonymously
             signInAnonymously();
+            //get his uuid and send it together with username to usercontrol
+            FirebaseUser user = mAuth.getCurrentUser();
+            user.getUid();
+            UserControl.get(getContext()).setUsername(user.getUid(), mUsernameEditText.getText().toString());
+
+
+            callNextActivity();
         }
 
 

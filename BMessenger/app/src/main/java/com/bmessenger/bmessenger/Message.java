@@ -6,4 +6,14 @@ package com.bmessenger.bmessenger;
 
 public class Message {
 
+    String mMessage;
+
+    public Message(String message) {
+        mMessage = message;
+    }
+
+    public String getMessage() {
+        return mMessage;
+    }
+
 }

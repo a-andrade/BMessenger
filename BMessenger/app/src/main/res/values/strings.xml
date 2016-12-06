@@ -8,7 +8,7 @@
     <string name="anon">Anonymous Login</string>
     <string name="msg_subscribed">Subscribed!</string>
 
-
+    <string name="create_username">Create</string>
     <string name="hint_user_id">User ID</string>
     <string name="get_custom_token">Get Token</string>
     <string name="sign_in">Sign In</string>

@@ -72,7 +72,7 @@ public class ChannelListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Echo Upstream message logic");
-                String message = "Simple Message";
+                String message = "Upstream Message";
                 Log.d(TAG, "Message: " + message + ", recipient: " + token);
                 FirebaseMessaging.getInstance().send(new RemoteMessage.Builder(FCM_PROJECT_SENDER_ID + FCM_SERVER_CONNECTION)
                         .setMessageId(Integer.toString(RANDOM.nextInt()))

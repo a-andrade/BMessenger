@@ -32,6 +32,7 @@
         </activity>
         <activity android:name=".ChannelActivity" />
         <activity android:name=".ChannelListActivity" />
+        <activity android:name=".MessagingActivity" />
         <!-- [START firebase_service] -->
         <service
             android:name=".MyFirebaseMessagingService">
