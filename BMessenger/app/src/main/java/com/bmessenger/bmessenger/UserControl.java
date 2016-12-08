@@ -14,6 +14,7 @@ public class UserControl {
     private Context mAppContext;
 
     private User mUser;
+    String mUsername;
 
 
     private UserControl(Context context) {
@@ -28,12 +29,11 @@ public class UserControl {
 
     }
 
-    public void setUsername(String UUID, String username) {
-        User user = new User(UUID, username);
-        mUser = user;
+    public void setUsername(String username) {
+        mUsername = username;
     }
 
-    public User getUser() {
-        return mUser;
+    public String getUserName() {
+        return mUsername;
     }
 }

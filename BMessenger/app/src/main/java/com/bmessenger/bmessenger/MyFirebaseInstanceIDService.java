@@ -9,10 +9,11 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
  * Created by uli on 11/19/2016.
  */
 
-public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
+public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService implements IRequestListener {
 
     private static final String TAG = "MyFirebaseIIDService";
 
+    private TokenService tokenService;
     /**
      * Called if InstanceID token is updated. This may occur if the security of
      * the previous token had been compromised. Note that this is called when the InstanceID token
@@ -42,5 +43,15 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
      */
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
+        tokenService = new TokenService(this, this);
+        tokenService.registerTokenInDB(token);
+    }
+
+    public void onComplete() {
+        Log.d(TAG, "Token Registration Complete");
+    }
+
+    public void onError(String message) {
+        Log.d(TAG, "Error trying to register the token in the DB: " + message);
     }
 }

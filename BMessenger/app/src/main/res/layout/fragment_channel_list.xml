@@ -4,36 +4,28 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.v7.widget.Toolbar
+    <TextView
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        android:paddingLeft="10dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <Button
-            android:text="subscribe"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:id="@+id/subscribe_Button"
-            android:layout_weight="1"/>
-
-        <Button
-            android:text="Message"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:id="@+id/message_Button"
-            android:layout_weight="1" />
+        android:layout_weight="1"
+        android:gravity="center_vertical">
         <TextView
-            android:id="@+id/message_View"
+
+            android:id="@+id/sampleTopic_TextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:paddingLeft="15dp"
+            android:layout_height="wrap_content"
+            android:text="@string/general_Channel"
+            android:textStyle="bold"
+            android:textSize="62sp"/>
     </LinearLayout>
     <ListView
         android:id="@+id/message_list_ListView"

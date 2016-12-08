@@ -270,7 +270,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             //get his uuid and send it together with username to usercontrol
             FirebaseUser user = mAuth.getCurrentUser();
             user.getUid();
-            UserControl.get(getContext()).setUsername(user.getUid(), mUsernameEditText.getText().toString());
+            UserControl.get(getContext()).setUsername( mUsernameEditText.getText().toString());
 
 
             callNextActivity();

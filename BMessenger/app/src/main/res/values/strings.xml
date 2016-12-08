@@ -6,7 +6,14 @@
     <string name="id_fmt">User ID: %s</string>
     <string name="email_fmt">Email: %s</string>
     <string name="anon">Anonymous Login</string>
+    <string name="general_Channel">General</string>
     <string name="msg_subscribed">Subscribed!</string>
+    <string name="dialog_notice">We noticed you don\'t have a username.
+        Would you like to create one now?</string>
+    <string name="username">username</string>
+    <string name="channel_list_title">Channels</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">cancel</string>
 
     <string name="create_username">Create</string>
     <string name="hint_user_id">User ID</string>

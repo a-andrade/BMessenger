@@ -1,8 +1,12 @@
 package com.bmessenger.bmessenger;
 
 import android.app.DownloadManager;
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,13 +35,11 @@ public class ChannelListFragment extends Fragment {
     public static final String FCM_SERVER_CONNECTION = "@gcm.googleapis.com";
     public static final String BACKEND_ACTION_MESSAGE = "com.wedevol.MESSAGE";
     public static final String BACKEND_ACTION_ECHO = "com.wedevol.ECHO";
+    public static final String PAYLOAD_ATTRIBUTE_RECIPIENT = "recipient";
     public static final Random RANDOM = new Random();
     private static String TAG = "ChannelListFragment";
 
-
-    private Button subButton;
-    private Button messageButton;
-    private TextView messageView;
+    private TextView mChannelTextView;
 
 
     @Override
@@ -49,39 +51,19 @@ public class ChannelListFragment extends Fragment {
 
 
 
-        subButton = (Button) v.findViewById(R.id.subscribe_Button);
-        messageButton = (Button) v.findViewById(R.id.message_Button);
-        messageView = (TextView) v.findViewById(R.id.message_View);
 
-        subButton.setOnClickListener(new View.OnClickListener() {
+        mChannelTextView = (TextView) v.findViewById(R.id.sampleTopic_TextView);
+
+
+        Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(),  "fonts/WireOne.ttf");
+
+        mChannelTextView.setTypeface(custom_font);
+
+        mChannelTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // [START subscribe_topics]
-                FirebaseMessaging.getInstance().subscribeToTopic("cecs491");
-                // [END subscribe_topics]
-
-                // Log and toast
-                String msg = getString(R.string.msg_subscribed);
-                Log.d(TAG, msg);
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        messageButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Echo Upstream message logic");
-                String message = "Upstream Message";
-                Log.d(TAG, "Message: " + message + ", recipient: " + token);
-                FirebaseMessaging.getInstance().send(new RemoteMessage.Builder(FCM_PROJECT_SENDER_ID + FCM_SERVER_CONNECTION)
-                        .setMessageId(Integer.toString(RANDOM.nextInt()))
-                        .addData("user", "kyocera")
-                        .addData("message", message)
-                        .addData("action", BACKEND_ACTION_ECHO)
-                        .build());
-                // To send a message to other device through the XMPP Server, you should add the
-                // receiverId and change the action name to BACKEND_ACTION_MESSAGE in the data
+                Intent i = new Intent(getActivity(), MessagingActivity.class);
+                startActivity(i);
             }
         });
 
