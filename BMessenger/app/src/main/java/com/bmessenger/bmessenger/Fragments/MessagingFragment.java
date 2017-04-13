@@ -1,11 +1,10 @@
-package com.bmessenger.bmessenger;
+package com.bmessenger.bmessenger.Fragments;
 
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,23 +15,27 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bmessenger.bmessenger.Manager.ChannelControl;
+import com.bmessenger.bmessenger.R;
+import com.bmessenger.bmessenger.Models.User;
+import com.bmessenger.bmessenger.Manager.UserControl;
+import com.bmessenger.bmessenger.Utilities.Util;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
-import static com.bmessenger.bmessenger.ChannelListFragment.BACKEND_ACTION_ECHO;
-import static com.bmessenger.bmessenger.ChannelListFragment.BACKEND_ACTION_MESSAGE;
-import static com.bmessenger.bmessenger.ChannelListFragment.FCM_PROJECT_SENDER_ID;
-import static com.bmessenger.bmessenger.ChannelListFragment.FCM_SERVER_CONNECTION;
-import static com.bmessenger.bmessenger.ChannelListFragment.PAYLOAD_ATTRIBUTE_RECIPIENT;
-import static com.bmessenger.bmessenger.ChannelListFragment.RANDOM;
+import static com.bmessenger.bmessenger.Utilities.Util.BACKEND_ACTION_TOPIC_MESSAGE;
+import static com.bmessenger.bmessenger.Utilities.Util.FCM_SERVER_CONNECTION;
+import static com.bmessenger.bmessenger.Utilities.Util.PAYLOAD_ATTRIBUTE_RECIPIENT;
+import static com.bmessenger.bmessenger.Utilities.Util.RANDOM;
 
 /**
  * Created by uli on 12/5/2016.
  */
 
-public class MessagingFragment extends Fragment  implements ChannelControl.Callbacks{
+public class MessagingFragment extends Fragment  implements ChannelControl.Callbacks {
     public static  final String TAG = "Messaging Fragment";
+    public static final String CHANNEL_NAME = "MessaginFragment.ChannelName";
     private ListView mListView;
     private TextView mTextView;
     private EditText mEditText;
@@ -42,6 +45,22 @@ public class MessagingFragment extends Fragment  implements ChannelControl.Callb
     private User mUser;
 
 
+    public static MessagingFragment newInstance(String data) {
+        MessagingFragment f = new MessagingFragment();
+        Bundle args = new Bundle();
+        args.putString(MessagingFragment.CHANNEL_NAME, data);
+        f.setArguments(args);
+        return f;
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,14 +69,17 @@ public class MessagingFragment extends Fragment  implements ChannelControl.Callb
         mTextView = (TextView) v.findViewById(R.id.message_list_TextView);
         mEditText = (EditText) v.findViewById(R.id.createMessage_EditText);
         mSendButton = (Button) v.findViewById(R.id.sendMessage_Button);
-        mTitle = (TextView)v.findViewById(R.id.my_toolbar);
+
         mScrollView = (ScrollView)v.findViewById(R.id.my_ScrollView);
 
         Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(),  "fonts/WireOne.ttf");
+        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+        toolbar.setTitle(UserControl.get(getActivity()).getmChannelName());
 
         mSendButton.setTypeface(custom_font);
-        mTitle.setTypeface(custom_font);
 
+
+        mTextView.append("\t\t\tWelcome to " +  UserControl.get(getActivity()).getmChannelName() +  " \n\n");
 
         UserControl userControl = UserControl.get(getContext());
         //final User mUser = userControl.getUser();
@@ -69,7 +91,7 @@ public class MessagingFragment extends Fragment  implements ChannelControl.Callb
 //            }
 //        }
         final String token = FirebaseInstanceId.getInstance().getToken();
-        FirebaseMessaging.getInstance().subscribeToTopic("cecs491");
+        FirebaseMessaging.getInstance().subscribeToTopic("palmyra");
 
         mEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,23 +106,22 @@ public class MessagingFragment extends Fragment  implements ChannelControl.Callb
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Echo Upstream message logic");
                 String message = mEditText.getText().toString();
                 String user;
                 if(UserControl.get(getContext()).getUserName() == null) {
-                    user = "anon";
+                    user = Util.getAnonString();
                 }
                 else {
                     user = UserControl.get(getContext()).getUserName();
                 }
                 mEditText.setText("");
                 //Log.d(TAG, "Message: " + message + ", recipient: " + token);
-                FirebaseMessaging.getInstance().send(new RemoteMessage.Builder(FCM_PROJECT_SENDER_ID + FCM_SERVER_CONNECTION)
+                FirebaseMessaging.getInstance().send(new RemoteMessage.Builder(Util.FCM_PROJECT_SENDER_ID + FCM_SERVER_CONNECTION)
                         .setMessageId(Integer.toString(RANDOM.nextInt()))
-                        .addData(PAYLOAD_ATTRIBUTE_RECIPIENT, "/topics/cecs491")
+                        .addData(PAYLOAD_ATTRIBUTE_RECIPIENT, "/topics/palmyra")
                         .addData("user", user)
                         .addData("message", message)
-                        .addData("action", BACKEND_ACTION_MESSAGE)
+                        .addData("action", BACKEND_ACTION_TOPIC_MESSAGE)
                         .build());
                 // To send a message to other device through the XMPP Server, you should add the
                 // receiverId and change the action name to BACKEND_ACTION_MESSAGE in the data
@@ -125,9 +146,7 @@ public class MessagingFragment extends Fragment  implements ChannelControl.Callb
 
             }
         });
-
     }
-
 
     @Override
     public void onAttach(Context context) {

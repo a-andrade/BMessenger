@@ -1,9 +1,8 @@
-package com.bmessenger.bmessenger;
+package com.bmessenger.bmessenger.Manager;
 
 import android.content.Context;
 
-import java.util.ArrayList;
-import java.util.Map;
+import com.bmessenger.bmessenger.Models.User;
 
 /**
  * Created by uli on 11/14/2016.
@@ -16,6 +15,8 @@ public class UserControl {
     private User mUser;
     String mUsername;
 
+
+    String mChannelName;
 
     private UserControl(Context context) {
         mAppContext = context;
@@ -35,5 +36,13 @@ public class UserControl {
 
     public String getUserName() {
         return mUsername;
+    }
+
+    public String getmChannelName() {
+        return mChannelName;
+    }
+
+    public void setmChannelName(String mChannelName) {
+        this.mChannelName = mChannelName;
     }
 }

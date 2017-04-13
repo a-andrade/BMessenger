@@ -1,4 +1,4 @@
-package com.bmessenger.bmessenger;
+package com.bmessenger.bmessenger.Models;
 
 import java.util.ArrayList;
 

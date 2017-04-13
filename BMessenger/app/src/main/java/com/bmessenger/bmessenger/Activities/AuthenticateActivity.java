@@ -1,29 +1,21 @@
-package com.bmessenger.bmessenger;
+package com.bmessenger.bmessenger.Activities;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.os.IResultReceiver;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.bmessenger.bmessenger.Services.IRequestListener;
+import com.bmessenger.bmessenger.R;
+import com.bmessenger.bmessenger.Services.TokenService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -32,7 +24,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
  * Created by uli on 12/7/2016.
  */
 
-public class AuthenticateActivity extends Activity implements IRequestListener{
+public class AuthenticateActivity extends Activity implements IRequestListener {
     private static final String TAG = "AuthenticateActivity";
 
     private TextView mTextView;
@@ -124,7 +116,7 @@ public class AuthenticateActivity extends Activity implements IRequestListener{
     // [END on_stop_remove_listener]
 
     private void signInAnonymously() {
-        callNextActivity();
+        //callNextActivity();
         // [START signin_anonymously]
         mAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -141,7 +133,7 @@ public class AuthenticateActivity extends Activity implements IRequestListener{
                         }
 
                         // [START_EXCLUDE]
-                        callNextActivity();
+                        //callNextActivity();
                         // [END_EXCLUDE]
                     }
                 });
@@ -195,6 +187,7 @@ public class AuthenticateActivity extends Activity implements IRequestListener{
     private void callNextActivity() {
         Intent i = new Intent(this, ChannelListActivity.class);
         startActivity(i);
+        finish();
     }
 
 //    private boolean validateLinkForm() {
@@ -220,7 +213,7 @@ public class AuthenticateActivity extends Activity implements IRequestListener{
 //    }
 
     private void updateUI(FirebaseUser user) {
-        callNextActivity();
+        //callNextActivity();
         boolean isSignedIn = (user != null);
 
         // Status text

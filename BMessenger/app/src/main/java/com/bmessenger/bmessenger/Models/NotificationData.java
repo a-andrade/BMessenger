@@ -1,4 +1,4 @@
-package com.bmessenger.bmessenger;
+package com.bmessenger.bmessenger.Models;
 
 /**
  * Created by uli on 11/25/2016.

@@ -1,9 +1,8 @@
-package com.bmessenger.bmessenger;
+package com.bmessenger.bmessenger.Manager;
 
 import android.content.Context;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Map;
 
 /**

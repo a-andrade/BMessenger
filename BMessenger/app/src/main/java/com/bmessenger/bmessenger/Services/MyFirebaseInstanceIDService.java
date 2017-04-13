@@ -1,4 +1,4 @@
-package com.bmessenger.bmessenger;
+package com.bmessenger.bmessenger.Services;
 
 import android.util.Log;
 

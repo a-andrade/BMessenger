@@ -1,4 +1,4 @@
-package com.bmessenger.bmessenger;
+package com.bmessenger.bmessenger.Services;
 
 /**
  * Request Listener Interface. It is just to handle the HTTP request error
