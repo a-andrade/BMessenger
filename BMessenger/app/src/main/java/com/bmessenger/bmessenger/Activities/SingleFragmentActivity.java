@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.bmessenger.bmessenger.R;
+import com.bmessenger.bmessenger.Services.LocationProvider;
 
 /**
  * Created by uli on 11/14/2016.
@@ -14,6 +15,12 @@ import com.bmessenger.bmessenger.R;
 
 public abstract class SingleFragmentActivity extends AppCompatActivity {
 
+    private LocationProvider locationProvider;
+
+    private LocationProvider mService;
+    private boolean inEnv = false;
+
+    
     protected abstract Fragment createFragment();
     //used to return the fragment you want to place into container
 

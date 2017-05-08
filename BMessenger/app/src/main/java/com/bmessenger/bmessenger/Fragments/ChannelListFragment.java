@@ -1,15 +1,10 @@
 package com.bmessenger.bmessenger.Fragments;
 
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,26 +15,16 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.bmessenger.bmessenger.Activities.MessagingActivity;
 import com.bmessenger.bmessenger.Adapters.ChannelAdapter;
 import com.bmessenger.bmessenger.Models.ChannelItem;
 import com.bmessenger.bmessenger.R;
-import com.bmessenger.bmessenger.Manager.UserControl;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.ChannelIOException;
+import com.bmessenger.bmessenger.Services.LocationProvider;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
-
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 
@@ -48,10 +33,7 @@ import java.util.ArrayList;
  * Created by uli on 11/14/2016.
  */
 
-public class ChannelListFragment extends Fragment implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener {
+public class ChannelListFragment extends Fragment{
 
     private static String TAG = "ChannelListFragment";
 
@@ -60,9 +42,13 @@ public class ChannelListFragment extends Fragment implements
     private ChannelItem add_channel;
     private String scroll_to;
 
-    private GoogleApiClient mGoogleApiClient;
+    Toolbar toolbar;
+    RecyclerView recyclerView;
 
-    private LocationRequest mLocationRequest;
+
+//    private GoogleApiClient mGoogleApiClient;
+//
+//    private LocationRequest mLocationRequest;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,12 +59,6 @@ public class ChannelListFragment extends Fragment implements
         listChannelItems. add(new ChannelItem("CSULB", "talk with other students about campus"));
         listChannelItems. add(new ChannelItem("BM Dev", "talk with the developers of BM"));
         listChannelItems. add(new ChannelItem("News", "for all your CSULB news"));
-
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
     }
 
 
@@ -87,9 +67,9 @@ public class ChannelListFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_channel_list, container, false);
+        toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+        recyclerView  = (RecyclerView) v.findViewById(R.id.channelRecycleView);
 
-
-        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
         toolbar.setTitle("Channels");
         toolbar.inflateMenu(R.menu.menu_main);
 
@@ -98,7 +78,6 @@ public class ChannelListFragment extends Fragment implements
         //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
 
-        final RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.channelRecycleView);
 
         final ChannelAdapter adapter = new ChannelAdapter(getContext(), listChannelItems);
         recyclerView.setAdapter(adapter);
@@ -201,65 +180,4 @@ public class ChannelListFragment extends Fragment implements
 
         return v;
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Connect the client.
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onStop() {
-        // Disconnecting the client invalidates it.
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-
-        mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(1000); // Update location every second
-
-        if ( ContextCompat.checkSelfPermission( getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
-
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mGoogleApiClient, mLocationRequest, this);
-        }
-
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, this);
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i(TAG, "GoogleApiClient connection has been suspend");
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.i(TAG, "GoogleApiClient connection has failed");
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Toast.makeText(getContext(), "location is " + location.toString(), Toast.LENGTH_LONG).show();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -37,7 +37,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "LoginFragment";
 
     private EditText mUsernameEditText;
-    private EditText mPasswordField;
 
     private Button mRegisterButton;
 
@@ -181,70 +180,67 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         updateUI(null);
     }
 
-    private void linkAccount() {
-        // Make sure form is valid
-        if (!validateLinkForm()) {
-            return;
-        }
-
-        // Get email and password from form
-        String email = mUsernameEditText.getText().toString();
-        String password = mPasswordField.getText().toString();
-
-        // Create EmailAuthCredential with email and password
-        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
-
-        // Link the anonymous user to the email credential
-        showProgressDialog();
-        // [START link_credential]
-        mAuth.getCurrentUser().linkWithCredential(credential)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "linkWithCredential:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(getContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                        // [START_EXCLUDE]
-                        hideProgressDialog();
-                        // [END_EXCLUDE]
-                    }
-                });
-        // [END link_credential]
-    }
+//    private void linkAccount() {
+//        // Make sure form is valid
+//        if (!validateLinkForm()) {
+//            return;
+//        }
+//
+//
+//        // Create EmailAuthCredential with email and password
+//        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+//
+//        // Link the anonymous user to the email credential
+//        showProgressDialog();
+//        // [START link_credential]
+//        mAuth.getCurrentUser().linkWithCredential(credential)
+//                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        Log.d(TAG, "linkWithCredential:onComplete:" + task.isSuccessful());
+//
+//                        // If sign in fails, display a message to the user. If sign in succeeds
+//                        // the auth state listener will be notified and logic to handle the
+//                        // signed in user can be handled in the listener.
+//                        if (!task.isSuccessful()) {
+//                            Toast.makeText(getContext(), "Authentication failed.",
+//                                    Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                        // [START_EXCLUDE]
+//                        hideProgressDialog();
+//                        // [END_EXCLUDE]
+//                    }
+//                });
+//        // [END link_credential]
+//    }
 
     private void callNextActivity() {
         Intent i = new Intent(getActivity(), MessagingActivity.class);
         startActivity(i);
     }
 
-    private boolean validateLinkForm() {
-        boolean valid = true;
-
-        String email = mUsernameEditText.getText().toString();
-        if (TextUtils.isEmpty(email)) {
-            mUsernameEditText.setError("Required.");
-            valid = false;
-        } else {
-            mUsernameEditText.setError(null);
-        }
-
-        String password = mPasswordField.getText().toString();
-        if (TextUtils.isEmpty(password)) {
-            mPasswordField.setError("Required.");
-            valid = false;
-        } else {
-            mPasswordField.setError(null);
-        }
-
-        return valid;
-    }
+//    private boolean validateLinkForm() {
+//        boolean valid = true;
+//
+//        String email = mUsernameEditText.getText().toString();
+//        if (TextUtils.isEmpty(email)) {
+//            mUsernameEditText.setError("Required.");
+//            valid = false;
+//        } else {
+//            mUsernameEditText.setError(null);
+//        }
+//
+//        String password = mPasswordField.getText().toString();
+//        if (TextUtils.isEmpty(password)) {
+//            mPasswordField.setError("Required.");
+//            valid = false;
+//        } else {
+//            mPasswordField.setError(null);
+//        }
+//
+//        return valid;
+//    }
 
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
