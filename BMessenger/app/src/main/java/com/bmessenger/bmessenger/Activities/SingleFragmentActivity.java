@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.bmessenger.bmessenger.Fragments.ChannelListFragment;
 import com.bmessenger.bmessenger.Fragments.DisabledFragment;
+import com.bmessenger.bmessenger.Manager.ChannelControl;
 import com.bmessenger.bmessenger.R;
 import com.bmessenger.bmessenger.Services.LocationProvider;
 import com.google.android.gms.maps.model.LatLng;
@@ -57,8 +58,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
         //LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-        if(location.getLatitude() > 33.783491 && location.getLatitude() < 33.783797
-                && location.getLongitude() < -118.110316 && location.getLongitude() > -118.110320) {
+        if(true) {
 //        if(location.getLatitude() > 33.783877 && location.getLatitude() < 33.783990
 //                && location.getLongitude() < -117.856743 && location.getLongitude() > -117.856855) {
             Log.d(TAG, "should check if available frag is loaded");
@@ -113,6 +113,15 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     public void onPause() {
         super.onPause();
         mService.disconnect();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        Log.d(TAG, "onDestroyview");
+        ChannelControl leagueManager = ChannelControl.get(getApplicationContext());
+        leagueManager.removeCallback();
     }
 
 }

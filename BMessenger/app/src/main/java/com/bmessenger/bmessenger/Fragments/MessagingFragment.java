@@ -34,7 +34,7 @@ import static com.bmessenger.bmessenger.Utilities.Util.RANDOM;
  * Created by uli on 12/5/2016.
  */
 
-public class MessagingFragment extends Fragment  implements MyFirebaseMessagingService.Callbacks {
+public class MessagingFragment extends Fragment  implements ChannelControl.Callbacks {
     public static  final String TAG = "bmessenger.MessageFrag";
     public static final String CHANNEL_NAME = "MessagingFragment.ChannelName";
     private ListView mListView;
@@ -61,8 +61,8 @@ public class MessagingFragment extends Fragment  implements MyFirebaseMessagingS
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "Going o set callback");
-//        ChannelControl leagueManager = ChannelControl.get(getActivity());
-//        leagueManager.setCallback(this);
+        ChannelControl leagueManager = ChannelControl.get(getActivity());
+        leagueManager.setCallback(this);
 
     }
 
@@ -167,14 +167,7 @@ public class MessagingFragment extends Fragment  implements MyFirebaseMessagingS
     }
 
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
 
-        Log.d(TAG, "onDestroyview");
-//        ChannelControl leagueManager = ChannelControl.get(getActivity());
-//        leagueManager.removeCallback();
-    }
 
     @Override
     public void onDestroy() {

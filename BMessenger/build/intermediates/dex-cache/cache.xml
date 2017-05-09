@@ -3,30 +3,12 @@
 
     <item
         is-multidex="true"
-        jar="C:\Users\uli\.android\build-cache\558a6c3ac1b10a00f02a14fef4d83b9eb4d28a89\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="2f7e6e2dad1bccaf68a8820820adc6c0d5b96d37">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_94ab141b285836b60d85a8a13501b109bcbfbbba\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="cbc817abded5eeb5f5b8708d410a5d3ee8432da5">
+        sha1="b49b5d87a899783482a92ee26105f947bfd0e858">
         <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_fb3e67070e0f43eab23a76070613e76ca7543cd9\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\.android\build-cache\1692269e027919e0d0234b3dfc0612a6b9ce8473\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="894922f67adeaaef51f077a29e315da21a3382d3">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_eb95db9c7fd5c7f1c8d4f819bec85925b9976e37\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -36,51 +18,6 @@
         revision="25.0.0"
         sha1="c82741bc129dd5f99f11a4ab8666ae24262053b6">
         <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_f76a9470afdf34acfce871a982493fef900dc3d5\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\.android\build-cache\073e29a91fb7d6c7e54d9c3066e5174ef831c66d\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="0874286cc2fd88d54fdf130e9d5372730da6de97">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_feb0c931e4548bf3fe96cc4310635dd2ddc6bdba\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\.android\build-cache\62bce9356fd19a7ec586d225989a2f11c29cad62\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="3bd97cfefd783e9de1dd1c30574a6adb44b4409b">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_162dadadcf7fa9894360d1478738a10758c02aa0\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\.android\build-cache\fe9f1f471a92f811d258a8a2bf3360d0e3fd4bcd\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="e70f608219ed6b974644c333249ab2bb7b71de98">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_0efd1a6ec1fb4e3efe5ea40f09ff4e3bacf8e5c0\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\AppData\Local\Android\Sdk\extras\android\m2repository\com\android\support\support-annotations\24.0.0\support-annotations-24.0.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="2943c74db6d4346ab8c6531adac91fa05c137c40">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-24.0.0_ebac0d9420d1eaccd403b57eb31b4b835c3f223b\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\uli\.android\build-cache\558a6c3ac1b10a00f02a14fef4d83b9eb4d28a89\output\jars\libs\internal_impl-24.0.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="fcaf463e10e69c1923ccf1edeba3b4196d239e00">
-        <dex dex="C:\Users\uli\Documents\GitHub\BMessenger\BMessenger\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-24.0.0_4585490978a5278d3c4a3a9371455b6a8c581b69\classes.dex" />
     </item>
 
 </items>
