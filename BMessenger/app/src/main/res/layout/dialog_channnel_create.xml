@@ -13,7 +13,6 @@
         android:layout_marginBottom="4dp" />
     <EditText
         android:id="@+id/dialog_summary"
-        android:maxLength="35"
         android:inputType="textEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

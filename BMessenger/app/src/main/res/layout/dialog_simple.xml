@@ -4,7 +4,6 @@
     android:layout_height="wrap_content">
     <EditText
         android:id="@+id/dialog_editText"
-
         android:inputType="textEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

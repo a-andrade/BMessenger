@@ -1,33 +1,30 @@
 package com.bmessenger.bmessenger.Activities;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.bmessenger.bmessenger.Fragments.ChannelListFragment;
-import com.bmessenger.bmessenger.Fragments.DisabledFragment;
 import com.bmessenger.bmessenger.R;
 import com.bmessenger.bmessenger.Services.LocationProvider;
-import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by uli on 11/14/2016.
  */
 
 
-public abstract class SingleFragmentActivity extends AppCompatActivity implements LocationProvider.LocationCallback {
-    private final String TAG = "bmessenger.SingleFrag";
-    private LocationProvider mService;
-    private boolean inEnv = true;
+public abstract class SingleFragmentActivity extends AppCompatActivity {
 
+    private LocationProvider locationProvider;
+
+    private LocationProvider mService;
+    private boolean inEnv = false;
+
+    
     protected abstract Fragment createFragment();
     //used to return the fragment you want to place into container
 
+    //use to be able to override later in subclass to return a twopane fragment
     protected int getLayoutResId() {
         return R.layout.activity_fragment;
     }
@@ -36,9 +33,6 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResId());
-
-        mService = new LocationProvider(getApplicationContext(), this);
-
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
 
@@ -50,69 +44,4 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
                     .commit();
         }
     }
-
-    public void handleNewLocation(Location location) {
-        Log.d(TAG, location.toString());
-        //Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_SHORT).show();
-        double currentLatitude = location.getLatitude();
-        double currentLongitude = location.getLongitude();
-        //LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-        if(location.getLatitude() > 33.783491 && location.getLatitude() < 33.783797
-                && location.getLongitude() < -118.110316 && location.getLongitude() > -118.110320) {
-//        if(location.getLatitude() > 33.783877 && location.getLatitude() < 33.783990
-//                && location.getLongitude() < -117.856743 && location.getLongitude() > -117.856855) {
-            Log.d(TAG, "should check if available frag is loaded");
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager.findFragmentByTag("available")  == null) {
-                Toast.makeText(getApplicationContext(), "entered location", Toast.LENGTH_SHORT).show();
-                Fragment fragment = createFragment();
-                loadFragment(fragment, "available");
-                Log.d(TAG, "load normal fragment here");
-            }
-            else {
-                Log.d(TAG, "fragmanager found that tagged frag");
-
-            }
-
-
-        }
-        else {
-            Log.d(TAG, "should check if unavilable frag is loaded");
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            if(fragmentManager.findFragmentByTag("unavailable")  == null) {
-               Log.d(TAG, "Fragmanager says frag with that tag is not here");
-                Log.d(TAG, "load service unavail here");
-                Toast.makeText(getApplicationContext(), "left location", Toast.LENGTH_SHORT).show();
-                //Load service unavailable fragment
-                DisabledFragment fragment = new DisabledFragment();
-                loadFragment(fragment, "unavailable");
-            }
-            else {
-                Log.d(TAG, "fragmanager found that tagged frag");
-
-            }
-
-        }
-    }
-
-    private void loadFragment(Fragment fragment, String tag) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.fragmentContainer, fragment, tag);
-        fragmentTransaction.commit();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mService.connect();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mService.disconnect();
-    }
-
 }
