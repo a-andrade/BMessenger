@@ -25,11 +25,9 @@ import com.google.firebase.iid.FirebaseInstanceId;
  */
 
 public class AuthenticateActivity extends Activity implements IRequestListener {
-    private static final String TAG = "AuthenticateActivity";
+    private static final String TAG = "bmessenger.Auth";
 
     private TextView mTextView;
-
-
     private TokenService tokenService;
 
     // [START declare_auth]
@@ -47,12 +45,12 @@ public class AuthenticateActivity extends Activity implements IRequestListener {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
-        setContentView(R.layout.activity_intro);
-        mTextView = (TextView) findViewById(R.id.splash_TextView);
+        setContentView(R.layout.fragment_login);
+        //mTextView = (TextView) findViewById(R.id.splash_TextView);
 
         Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/WireOne.ttf");
 
-        mTextView.setTypeface(custom_font);
+        //mTextView.setTypeface(custom_font);
 
 
 
@@ -60,8 +58,8 @@ public class AuthenticateActivity extends Activity implements IRequestListener {
         Log.d(TAG, "Token: " + token);
 
         //Call the token service to save the token in the database
-        tokenService = new TokenService(this, this);
-        tokenService.registerTokenInDB(token);
+        //tokenService = new TokenService(this, this);
+        //tokenService.registerTokenInDB(token);
 
 
 

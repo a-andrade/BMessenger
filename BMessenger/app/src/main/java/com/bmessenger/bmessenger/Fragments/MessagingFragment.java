@@ -19,6 +19,7 @@ import com.bmessenger.bmessenger.Manager.ChannelControl;
 import com.bmessenger.bmessenger.R;
 import com.bmessenger.bmessenger.Models.User;
 import com.bmessenger.bmessenger.Manager.UserControl;
+import com.bmessenger.bmessenger.Services.MyFirebaseMessagingService;
 import com.bmessenger.bmessenger.Utilities.Util;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -33,9 +34,9 @@ import static com.bmessenger.bmessenger.Utilities.Util.RANDOM;
  * Created by uli on 12/5/2016.
  */
 
-public class MessagingFragment extends Fragment  implements ChannelControl.Callbacks {
-    public static  final String TAG = "Messaging Fragment";
-    public static final String CHANNEL_NAME = "MessaginFragment.ChannelName";
+public class MessagingFragment extends Fragment  implements MyFirebaseMessagingService.Callbacks {
+    public static  final String TAG = "bmessenger.MessageFrag";
+    public static final String CHANNEL_NAME = "MessagingFragment.ChannelName";
     private ListView mListView;
     private TextView mTextView;
     private EditText mEditText;
@@ -43,6 +44,8 @@ public class MessagingFragment extends Fragment  implements ChannelControl.Callb
     private TextView mTitle;
     private ScrollView mScrollView;
     private User mUser;
+
+
 
 
     public static MessagingFragment newInstance(String data) {
@@ -57,7 +60,9 @@ public class MessagingFragment extends Fragment  implements ChannelControl.Callb
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d(TAG, "Going o set callback");
+//        ChannelControl leagueManager = ChannelControl.get(getActivity());
+//        leagueManager.setCallback(this);
 
     }
 
@@ -76,12 +81,12 @@ public class MessagingFragment extends Fragment  implements ChannelControl.Callb
         Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
         toolbar.setTitle(UserControl.get(getActivity()).getmChannelName());
 
-        mSendButton.setTypeface(custom_font);
+        //mSendButton.setTypeface(custom_font);
 
 
-        mTextView.append("\t\t\tWelcome to " +  UserControl.get(getActivity()).getmChannelName() +  " \n\n");
+        mTextView.append("Welcome to " +  UserControl.get(getActivity()).getmChannelName() +  "\n");
 
-        UserControl userControl = UserControl.get(getContext());
+        UserControl userControl = UserControl.get(getActivity().getApplicationContext());
         //final User mUser = userControl.getUser();
 
 //        if (getActivity().getIntent().getExtras() != null) {
@@ -96,10 +101,10 @@ public class MessagingFragment extends Fragment  implements ChannelControl.Callb
         mEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(UserControl.get(getContext()).getUserName() == null) {
-                    UsernameDialog newDialog = new UsernameDialog();
-                    newDialog.show(getFragmentManager(), "missiles");
-                }
+//                if(UserControl.get(getContext()).getUserName() == null) {
+//                    UsernameDialog newDialog = new UsernameDialog();
+//                    newDialog.show(getFragmentManager(), "missiles");
+//                }
             }
         });
 
@@ -107,12 +112,11 @@ public class MessagingFragment extends Fragment  implements ChannelControl.Callb
             @Override
             public void onClick(View v) {
                 String message = mEditText.getText().toString();
-                String user;
+                String user = UserControl.get(getContext()).getUserName();;
                 if(UserControl.get(getContext()).getUserName() == null) {
-                    user = Util.getAnonString();
-                }
-                else {
-                    user = UserControl.get(getContext()).getUserName();
+                    String name = Util.getAnonString();
+                    UserControl.get(getContext()).setUsername(name);
+                    user = name;
                 }
                 mEditText.setText("");
                 //Log.d(TAG, "Message: " + message + ", recipient: " + token);
@@ -132,6 +136,8 @@ public class MessagingFragment extends Fragment  implements ChannelControl.Callb
     }
 
 
+
+
     public void messageReceived(String user, String message) {
         final String inUser = user;
         final String inMessage = message;
@@ -149,16 +155,30 @@ public class MessagingFragment extends Fragment  implements ChannelControl.Callb
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        ChannelControl leagueManager = ChannelControl.get(getActivity());
-        leagueManager.setCallback(this);
+    public void onPause() {
+        Log.d(TAG, "on PAuse");
+        super.onPause();
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        ChannelControl leagueManager = ChannelControl.get(getActivity());
-        leagueManager.removeCallback();
+    public void onStop() {
+        Log.d(TAG, "onSTop");
+        super.onStop();
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        Log.d(TAG, "onDestroyview");
+//        ChannelControl leagueManager = ChannelControl.get(getActivity());
+//        leagueManager.removeCallback();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestory");
     }
 }
