@@ -34,7 +34,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
-    private static final String TAG = "LoginFragment";
+    private static final String TAG = "bmessenger.LoginFrag";
 
     private EditText mUsernameEditText;
 

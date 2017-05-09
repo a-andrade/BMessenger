@@ -18,6 +18,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "FCMMessagingService";
 
+    private Callbacks mCallbacks;
+
+    public interface Callbacks {
+        void messageReceived(String user, String message);
+    }
+
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
@@ -32,8 +39,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message received: " + message);
             Log.d(TAG, "User was: " + user);
 
-            ChannelControl channelControl = ChannelControl.get(getApplication().getApplicationContext());
-            channelControl.onMessageReceived(user, message);
+            //ChannelControl channelControl = ChannelControl.get(getApplicationContext());
+            messageReceived(user, message);
             //showBasicNotification(message);
         }
 
@@ -61,6 +68,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         manager.notify(0,builder.build());
 
+    }
+
+    public void messageReceived(String user, String message) {
+        if(mCallbacks == null) {
+            Log.d(TAG, "mCallbacks is null, fragment was removed");
+        }
+        else {
+            mCallbacks.messageReceived(user, message);
+        }
     }
 
 

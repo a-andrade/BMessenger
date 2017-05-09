@@ -15,6 +15,7 @@ public class Util {
 
     public static String getAnonString() {
         //TODO: return "anon" + unique randomID
-        return "anon";
+        Random random = new Random();
+        return "anon" + String.valueOf(random.nextInt(10000 - 1000) + 1000);
     }
 }
