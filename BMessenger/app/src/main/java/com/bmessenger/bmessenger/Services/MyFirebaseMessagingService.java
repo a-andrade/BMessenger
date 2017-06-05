@@ -7,7 +7,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.bmessenger.bmessenger.Activities.LoginActivity;
-import com.bmessenger.bmessenger.Manager.ChannelControl;
+import com.bmessenger.bmessenger.Manager.MessageControl;
 import com.bmessenger.bmessenger.R;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -39,8 +39,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message received: " + message);
             Log.d(TAG, "User was: " + user);
 
-            ChannelControl channelControl = ChannelControl.get(getApplicationContext());
-            channelControl.onMessageReceived(user, message);
+            MessageControl messageControl = MessageControl.get(getApplicationContext());
+            messageControl.onMessageReceived(user, message);
             //showBasicNotification(message);
         }
 

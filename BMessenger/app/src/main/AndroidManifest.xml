@@ -53,6 +53,15 @@
             </intent-filter>
         </service>
         <!-- [END firebase_iid_service] -->
+
+        <service
+            android:name=".Services.ChannelAddUserService"
+            android:exported="false"/>
+        <service
+            android:name=".Services.RegisterChannelService"
+            android:exported="false"/>
+        <service android:name=".Services.ChannelRemoveUserService"
+            android:exported="false" />
     </application>
 
 </manifest>

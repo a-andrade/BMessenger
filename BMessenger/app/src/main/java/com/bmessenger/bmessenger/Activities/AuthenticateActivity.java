@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.bmessenger.bmessenger.Services.IRequestListener;
 import com.bmessenger.bmessenger.R;
-import com.bmessenger.bmessenger.Services.TokenService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -27,8 +26,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 public class AuthenticateActivity extends Activity implements IRequestListener {
     private static final String TAG = "bmessenger.Auth";
 
-    private TextView mTextView;
-    private TokenService tokenService;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;

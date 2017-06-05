@@ -49,13 +49,17 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
         setContentView(R.layout.fragment_login);
         createUsernameButton = (Button)findViewById(R.id.createUsernameButton);
         getRandomUsernameButton = (Button)findViewById(R.id.anonButton);
-        nextButton = (Button)findViewById(R.id.nextButton);
+        //nextButton = (Button)findViewById(R.id.nextButton);
 
         createUsernameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                     UsernameDialog newDialog = new UsernameDialog();
                     newDialog.show(getSupportFragmentManager(), "missiles");
+                if(UserControl.get(getApplicationContext()).getUserName() != null) {
+                    Intent i = new Intent(getApplicationContext(), ChannelListActivity.class);
+                    startActivity(i);
+                }
             }
         });
 
@@ -63,18 +67,20 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
             @Override
             public void onClick(View v) {
                 UserControl.get(getApplicationContext()).setUsername(Util.getAnonString());
-                Toast.makeText(getApplicationContext(), "Your name is now " + UserControl
-                        .get(getApplicationContext()).getUserName(), Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), ChannelListActivity.class);
+                startActivity(i);
+//                Toast.makeText(getApplicationContext(), "Your name is now " + UserControl
+//                        .get(getApplicationContext()).getUserName(), Toast.LENGTH_SHORT).show();
             }
         });
 
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), ChannelListActivity.class);
-                startActivity(i);
-            }
-        });
+//        nextButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i = new Intent(getApplicationContext(), ChannelListActivity.class);
+//                startActivity(i);
+//            }
+//        });
 
         final String token = FirebaseInstanceId.getInstance().getToken();
 

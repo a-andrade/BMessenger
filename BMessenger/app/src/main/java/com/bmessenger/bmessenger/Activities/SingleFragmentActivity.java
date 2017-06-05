@@ -9,12 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.bmessenger.bmessenger.Fragments.ChannelListFragment;
 import com.bmessenger.bmessenger.Fragments.DisabledFragment;
-import com.bmessenger.bmessenger.Manager.ChannelControl;
+import com.bmessenger.bmessenger.Manager.MessageControl;
 import com.bmessenger.bmessenger.R;
 import com.bmessenger.bmessenger.Services.LocationProvider;
-import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by uli on 11/14/2016.
@@ -22,7 +20,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 
 public abstract class SingleFragmentActivity extends AppCompatActivity implements LocationProvider.LocationCallback {
-    private final String TAG = "bmessenger.SingleFrag";
+
+    //TODO: Fix the location to work on Palmyra
+    private final String TAG = getClass().getName().toString();
     private LocationProvider mService;
     private boolean inEnv = true;
 
@@ -99,28 +99,45 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.replace(R.id.fragmentContainer, fragment, tag);
+        fragmentTransaction.add(R.id.fragmentContainer, fragment, tag);
         fragmentTransaction.commit();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mService.connect();
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
+
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mService.disconnect();
-    }
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        Log.d(TAG, "onStop");
+//
+//    }
+//
+//
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        mService.connect();
+//        Log.d(TAG, "onResume");
+//    }
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        mService.disconnect();
+//        Log.d(TAG, "onPause");
+//    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        Log.d(TAG, "onDestroyview");
-        ChannelControl leagueManager = ChannelControl.get(getApplicationContext());
+        Log.d(TAG, "onDestroy");
+        MessageControl leagueManager = MessageControl.get(getApplicationContext());
         leagueManager.removeCallback();
     }
 

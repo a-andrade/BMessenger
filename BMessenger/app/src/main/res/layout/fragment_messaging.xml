@@ -28,7 +28,6 @@
 
     </ScrollView>
     <LinearLayout
-        android:background="@color/lightGray"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
@@ -37,13 +36,20 @@
             android:id="@+id/createMessage_EditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"/>
+            android:layout_weight="3"
+            android:inputType="textShortMessage"
+            android:background="@android:color/transparent"
+            android:layout_margin="6dp"
+            android:hint="@string/message_hint"/>
         <Button
             android:id="@+id/sendMessage_Button"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_height="match_parent"
             android:text="@string/send"/>
+
     </LinearLayout>
 
 </LinearLayout>

@@ -27,9 +27,20 @@ public class ChannelItem {
 
     private String mSummary;
 
-    public ChannelItem(String name, String summary) {
+    public int getUsers() {
+        return mUsers;
+    }
+
+    public void setUsers(int mUsers) {
+        this.mUsers = mUsers;
+    }
+
+    private int mUsers;
+
+    public ChannelItem(String name, String summary, int users) {
         mName = name;
         mSummary = summary;
+        mUsers = users;
     }
 
     @Override
@@ -41,7 +52,7 @@ public class ChannelItem {
             return false;
         }
         final ChannelItem other = (ChannelItem) obj;
-        if ((this.mName == null) ? (other.mName != null) : !this.mName.equals(other.mName)) {
+        if ((this.mName == null) ? (other.mName != null) : !this.mName.equalsIgnoreCase(other.mName)) {
             return false;
         }
         return true;

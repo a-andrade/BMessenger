@@ -18,6 +18,7 @@ import com.bmessenger.bmessenger.R;
  */
 
 public class SimpleDialog extends DialogFragment {
+    //TODO: Remove this class
 
 
     private TextView noticeTextView;

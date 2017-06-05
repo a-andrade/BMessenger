@@ -1,8 +1,7 @@
 package com.bmessenger.bmessenger.Fragments;
 
 import android.content.DialogInterface;
-import android.graphics.Typeface;
-import android.location.Location;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -22,9 +21,13 @@ import android.widget.Toast;
 import com.bmessenger.bmessenger.Adapters.ChannelAdapter;
 import com.bmessenger.bmessenger.Models.ChannelItem;
 import com.bmessenger.bmessenger.R;
-import com.bmessenger.bmessenger.Services.LocationProvider;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.bmessenger.bmessenger.Services.RegisterChannelService;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 
 import java.util.ArrayList;
 
@@ -34,6 +37,7 @@ import java.util.ArrayList;
  */
 
 public class ChannelListFragment extends Fragment{
+    //TODO: add spinner until channels show
 
     private static String TAG = "ChannelListFragment";
 
@@ -41,27 +45,51 @@ public class ChannelListFragment extends Fragment{
 
     private ChannelItem add_channel;
     private String scroll_to;
-
     Toolbar toolbar;
     RecyclerView recyclerView;
-
-
-//    private GoogleApiClient mGoogleApiClient;
-//
-//    private LocationRequest mLocationRequest;
+    private DatabaseReference databaseReference;
+    private ChannelAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ChannelItem item = new ChannelItem("General", "general room for all");
-        listChannelItems. add(item);
-        listChannelItems. add(new ChannelItem("CECS 491", "join us for 491 content"));
-        listChannelItems. add(new ChannelItem("CSULB", "talk with other students about campus"));
-        listChannelItems. add(new ChannelItem("BM Dev", "talk with the developers of BM"));
-        listChannelItems. add(new ChannelItem("News", "for all your CSULB news"));
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("channels");
+
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "onChildAdded " + dataSnapshot.getValue(Chanel.class).toString());
+                listChannelItems.add(new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Chanel.class).getSummary(), dataSnapshot.getValue(Chanel.class).getUsers()));
+                adapter.notifyItemInserted(listChannelItems.size() - 1);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "onChildChanged");
+                listChannelItems.get( listChannelItems.indexOf(new ChannelItem(dataSnapshot.getKey(), "", 0))).setUsers(dataSnapshot.getValue(Chanel.class).getUsers());
+                adapter.notifyItemChanged(listChannelItems.indexOf(new ChannelItem(dataSnapshot.getKey(), "", 0)));
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                ChannelItem channelItem = new ChannelItem(dataSnapshot.getKey(), "", 0);
+                int index = listChannelItems.indexOf(channelItem);
+                listChannelItems.remove(index);
+                adapter.notifyItemRemoved(index);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "onChildMoved");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled");
+            }
+        });
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,7 +97,6 @@ public class ChannelListFragment extends Fragment{
         View v = inflater.inflate(R.layout.fragment_channel_list, container, false);
         toolbar = (Toolbar) v.findViewById(R.id.toolbar);
         recyclerView  = (RecyclerView) v.findViewById(R.id.channelRecycleView);
-
         toolbar.setTitle("Channels");
         toolbar.inflateMenu(R.menu.menu_main);
 
@@ -78,13 +105,13 @@ public class ChannelListFragment extends Fragment{
         //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
 
-
-        final ChannelAdapter adapter = new ChannelAdapter(getContext(), listChannelItems);
+        adapter = new ChannelAdapter(getContext(), listChannelItems);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        final String token = FirebaseInstanceId.getInstance().getToken();
-        Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(),  "fonts/WireOne.ttf");
+//
+//        final String token = FirebaseInstanceId.getInstance().getToken();
+//        Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(),  "fonts/WireOne.ttf");
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -93,6 +120,7 @@ public class ChannelListFragment extends Fragment{
 
                     case R.id.menuAdd:
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        //TODO: fix diaglog UI
                         builder.setTitle("Add Channel");
                         // I'm using fragment here so I'm using getView() to provide ViewGroup
                         // but you can provide here any other instance of ViewGroup from your Fragment / Activity
@@ -109,15 +137,21 @@ public class ChannelListFragment extends Fragment{
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+
                                 add_channel = new ChannelItem(
                                         input.getText().toString(),
-                                        input2.getText().toString());
+                                        input2.getText().toString(),
+                                        0);
                                 if(!listChannelItems.contains(add_channel)) {
-                                    listChannelItems.add(add_channel);
+                                    Intent intent  = new Intent(getActivity(), RegisterChannelService.class);
+                                    intent.putExtra(RegisterChannelService.EXTRA_CHANNEL, input.getText().toString());
+                                    intent.putExtra(RegisterChannelService.EXTRA_SUMMARY, input2.getText().toString());
+                                    getActivity().startService(intent);
                                     //add toast if needed
-                                    adapter.notifyItemInserted(listChannelItems.size() - 1);
                                 }
-
+                                else {
+                                    Toast.makeText(getContext(), "Channel already exists", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         });
                         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -179,5 +213,24 @@ public class ChannelListFragment extends Fragment{
         });
 
         return v;
+    }
+
+    public static class Chanel {
+        //TODO: Fix this
+        public int users;
+        public String summary;
+
+        @Override
+        public String toString() {
+            return users + " " + summary;
+        }
+
+        public int getUsers() {
+            return users;
+        }
+
+        public String getSummary() {
+            return summary;
+        }
     }
 }

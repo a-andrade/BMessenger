@@ -3,14 +3,13 @@ package com.bmessenger.bmessenger.Manager;
 import android.content.Context;
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.Map;
 
 /**
  * Created by uli on 11/14/2016.
  */
 
-public class ChannelControl {
+public class MessageControl {
     private  static final String TAG = "bmessenger.Control";
     private Callbacks mCallbacks;
 
@@ -18,14 +17,10 @@ public class ChannelControl {
         void messageReceived(String user, String message);
     }
 
-    private static ChannelControl sChannelControl;
+    private static MessageControl sMessageControl;
     private Context mAppContext;
 
-    private Map<String, Integer> mTopicRooms;
-
-
-
-    private ChannelControl(Context context) {
+    private MessageControl(Context context) {
         mAppContext = context;
     }
 
@@ -42,19 +37,11 @@ public class ChannelControl {
         mCallbacks = null;
     }
 
-    public static ChannelControl get(Context c) {
-        if(sChannelControl == null) {
-            sChannelControl = new ChannelControl(c.getApplicationContext());
+    public static MessageControl get(Context c) {
+        if(sMessageControl == null) {
+            sMessageControl = new MessageControl(c.getApplicationContext());
         }
-        return sChannelControl;
-    }
-
-    public void addChanel(String name) {
-        mTopicRooms.put(name, 0);
-    }
-
-    public Array[] getChannels() {
-        return (Array[])mTopicRooms.keySet().toArray();
+        return sMessageControl;
     }
 
     public void onMessageReceived(String user, String message) {
