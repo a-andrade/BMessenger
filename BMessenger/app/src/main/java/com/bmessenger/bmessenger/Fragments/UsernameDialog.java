@@ -2,16 +2,22 @@ package com.bmessenger.bmessenger.Fragments;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.bmessenger.bmessenger.Activities.ChannelListActivity;
 import com.bmessenger.bmessenger.Manager.UserControl;
 import com.bmessenger.bmessenger.R;
+
+import java.util.regex.Pattern;
 
 /**
  * Created by uli on 12/7/2016.
@@ -19,7 +25,8 @@ import com.bmessenger.bmessenger.R;
 
 public class UsernameDialog extends DialogFragment {
 
-
+    //TODO: fix ui for this fragment
+    //TODO: fix ok button until after its ok
     private TextView noticeTextView;
     private EditText mDialogEditText;
 
@@ -31,12 +38,14 @@ public class UsernameDialog extends DialogFragment {
         noticeTextView = (TextView)v.findViewById(R.id.dialog_TextView);
         mDialogEditText = (EditText)v.findViewById(R.id.username_EditText);
 
-        Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(),
-                "fonts/WireOne.ttf");
 
-        noticeTextView.setTypeface(custom_font);
 
-        return new AlertDialog.Builder(getActivity())
+//        Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(),
+//                "fonts/WireOne.ttf");
+
+//        noticeTextView.setTypeface(custom_font);
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setView(v)
                 .setPositiveButton(
                         android.R.string.ok,
@@ -45,6 +54,8 @@ public class UsernameDialog extends DialogFragment {
                                 if(mDialogEditText.getText() != null) {
                                     UserControl.get(getContext())
                                             .setUsername(mDialogEditText.getText().toString());
+                                    Intent i = new Intent(getContext(), ChannelListActivity.class);
+                                    startActivity(i);
                                 }
                             }
 
@@ -61,24 +72,39 @@ public class UsernameDialog extends DialogFragment {
                 )
                 .create();
 
-//        LayoutInflater inflater = getActivity().getLayoutInflater();
 
-//        // Inflate and set the layout for the dialog
-//        // Pass null as the parent view because its going in the dialog layout
-//        builder.setView(inflater.inflate(R.layout.dialog_signin, null))
-//
-//                // Add action buttons
-//                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int id) {
-//
-//                    }
-//                })
-//                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        UsernameDialog.this.getDialog().cancel();
-//                    }
-//                });
-//        return builder.create();
+
+        mDialogEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!Pattern.matches("^[a-z0-9_-]{3,15}$", s.toString())) {
+                    mDialogEditText.setError("Username must only contain alphanumeric characters");
+                }
+                else
+                    ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+                            .setEnabled(true);
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if(s.length() > 2) {
+                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                            .setEnabled(true);
+                }
+                else
+                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                            .setEnabled(false);
+            }
+        });
+
+       return  alertDialog;
     }
 }

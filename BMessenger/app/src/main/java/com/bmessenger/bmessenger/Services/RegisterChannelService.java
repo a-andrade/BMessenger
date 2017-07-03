@@ -35,6 +35,7 @@ public class RegisterChannelService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         FirebaseDatabase.getInstance().getReference(channelNode).child(intent.getStringExtra(EXTRA_CHANNEL)).child(summaryNode).setValue(intent.getStringExtra(EXTRA_SUMMARY));
+        FirebaseDatabase.getInstance().getReference(channelNode).child(intent.getStringExtra(EXTRA_CHANNEL)).child(usersNode).setValue(0);
 
     }
 

@@ -15,14 +15,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 
-import static com.google.android.gms.wearable.DataMap.TAG;
 
 /**
  * Created by uli on 6/4/2017.
  */
 
 public class ChannelRemoveUserService extends Service {
-
+    private static  final String TAG = "RemoveUserService";
     public static final String EXTRA_CHANNEL = "channelExtra";
     private String channelNode = "channels";
     private String usersNode = "users";

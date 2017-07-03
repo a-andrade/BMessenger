@@ -16,6 +16,7 @@ public class ChannelListActivity extends SingleFragmentActivity {
 
     @Override
     public Fragment createFragment() {
+
         return new ChannelListFragment();
     }
 

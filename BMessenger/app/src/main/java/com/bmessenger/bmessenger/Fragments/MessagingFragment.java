@@ -54,7 +54,7 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
         Intent intent  = new Intent(getActivity(), ChannelAddUserService.class);
         intent.putExtra(ChannelAddUserService.EXTRA_CHANNEL, mChannel);
         getActivity().startService(intent);
-        FirebaseMessaging.getInstance().subscribeToTopic(mChannel);
+        FirebaseMessaging.getInstance().subscribeToTopic( mChannel);
 
 
     }
@@ -77,7 +77,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
 
         mTextView.append("Welcome to " +  UserControl.get(getActivity()).getmChannelName() +  "\n");
 
-        //TODO: set correct rooms to subsribe and unsub
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

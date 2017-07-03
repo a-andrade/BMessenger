@@ -37,7 +37,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResId());
-
+        Log.d(TAG, "onCreate");
         mService = new LocationProvider(getApplicationContext(), this);
 
         FragmentManager fm = getSupportFragmentManager();
@@ -57,10 +57,9 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
         //Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_SHORT).show();
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
-        //LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-        if(true) {
-//        if(location.getLatitude() > 33.783877 && location.getLatitude() < 33.783990
-//                && location.getLongitude() < -117.856743 && location.getLongitude() > -117.856855) {
+//        LatLng latLng = new LatLng(currentLatitude, currentLongitude);
+        if(location.getLatitude() > 33.783877 && location.getLatitude() < 33.783990
+                && location.getLongitude() < -117.856743 && location.getLongitude() > -117.856855) {
             Log.d(TAG, "should check if available frag is loaded");
             FragmentManager fragmentManager = getSupportFragmentManager();
             if(fragmentManager.findFragmentByTag("available")  == null) {
@@ -110,27 +109,27 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
 
     }
 
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        Log.d(TAG, "onStop");
-//
-//    }
-//
-//
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        mService.connect();
-//        Log.d(TAG, "onResume");
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        mService.disconnect();
-//        Log.d(TAG, "onPause");
-//    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mService.connect();
+        Log.d(TAG, "onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mService.disconnect();
+        Log.d(TAG, "onPause");
+    }
 
     @Override
     public void onDestroy() {

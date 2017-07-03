@@ -26,6 +26,7 @@
         <!-- [END fcm_default_icon] -->
         <activity
             android:name=".Activities.LoginActivity"
+            android:screenOrientation="portrait"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,9 +34,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.ChannelActivity" />
-        <activity android:name=".Activities.ChannelListActivity" />
+        <activity android:name=".Activities.ChannelActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Activities.ChannelListActivity"
+            android:screenOrientation="portrait"
+            />
         <activity android:name=".Activities.MessagingActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
         <!-- [START firebase_service] -->
         <service
