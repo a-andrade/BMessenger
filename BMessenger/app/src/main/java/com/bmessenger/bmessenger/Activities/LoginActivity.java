@@ -31,12 +31,10 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginActivity extends AppCompatActivity implements IRequestListener {
     //TODO: log usernames to keep them unique
-    //TODO: set database writing reading restrictions
 
     private final String TAG = "bmessenger.Login";
     private Button createUsernameButton;
     private Button getRandomUsernameButton;
-    private Button nextButton;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -51,7 +49,6 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
         setContentView(R.layout.fragment_login);
         createUsernameButton = (Button)findViewById(R.id.createUsernameButton);
         getRandomUsernameButton = (Button)findViewById(R.id.anonButton);
-        //nextButton = (Button)findViewById(R.id.nextButton);
 
         createUsernameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,19 +67,9 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
                 Intent i = new Intent(getApplicationContext(), ChannelListActivity.class);
                 startActivity(i);
 
-
-//                Toast.makeText(getApplicationContext(), "Your name is now " + UserControl
-//                        .get(getApplicationContext()).getUserName(), Toast.LENGTH_SHORT).show();
             }
         });
 
-//        nextButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent i = new Intent(getApplicationContext(), ChannelListActivity.class);
-//                startActivity(i);
-//            }
-//        });
 
 
 

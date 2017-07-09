@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 
 import com.bmessenger.bmessenger.Adapters.ChannelAdapter;
+import com.bmessenger.bmessenger.Models.Channel;
 import com.bmessenger.bmessenger.Models.ChannelItem;
 import com.bmessenger.bmessenger.R;
 import com.bmessenger.bmessenger.Services.RegisterChannelService;
@@ -78,13 +79,13 @@ public class ChannelListFragment extends Fragment{
         basicChannelQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG, "onChildAdded " + dataSnapshot.getValue(Chanel.class).toString());
+                Log.d(TAG, "onChildAdded " + dataSnapshot.getValue(Channel.class).toString());
                 progressBar.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 floatingActionButton.setVisibility(View.VISIBLE);
                 toolbar.setEnabled(true);
-                if(dataSnapshot.getValue(Chanel.class).getUsers() == 0) {
-                    basicChannelList.add(new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Chanel.class).getSummary(), dataSnapshot.getValue(Chanel.class).getUsers()));
+                if(dataSnapshot.getValue(Channel.class).getUsers() == 0) {
+                    basicChannelList.add(new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Channel.class).getSummary(), dataSnapshot.getValue(Channel.class).getUsers()));
                     adapter.notifyItemInserted(basicChannelList.size() - 1);
 
                     if(recentlyAddedChannel != null) {
@@ -95,12 +96,12 @@ public class ChannelListFragment extends Fragment{
 
                 }
                 else if(dataSnapshot.getKey().toString().equalsIgnoreCase("General")) {
-                    basicChannelList.add(0, new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Chanel.class).getSummary(), dataSnapshot.getValue(Chanel.class).getUsers()));
+                    basicChannelList.add(0, new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Channel.class).getSummary(), dataSnapshot.getValue(Channel.class).getUsers()));
                     adapter.notifyItemInserted(0);
                 }
                 else {
 
-                    basicChannelList.add(1, new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Chanel.class).getSummary(), dataSnapshot.getValue(Chanel.class).getUsers()));
+                    basicChannelList.add(1, new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Channel.class).getSummary(), dataSnapshot.getValue(Channel.class).getUsers()));
                     adapter.notifyItemInserted(1);
 
                 }
@@ -109,7 +110,7 @@ public class ChannelListFragment extends Fragment{
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Log.d(TAG, "onChildChanged");
-                basicChannelList.get( basicChannelList.indexOf(new ChannelItem(dataSnapshot.getKey(), "", 0))).setUsers(dataSnapshot.getValue(Chanel.class).getUsers());
+                basicChannelList.get( basicChannelList.indexOf(new ChannelItem(dataSnapshot.getKey(), "", 0))).setUsers(dataSnapshot.getValue(Channel.class).getUsers());
                 adapter.notifyItemChanged(basicChannelList.indexOf(new ChannelItem(dataSnapshot.getKey(), "", 0)));
             }
 
@@ -141,7 +142,7 @@ public class ChannelListFragment extends Fragment{
 
         recyclerView  = (RecyclerView) v.findViewById(R.id.channelRecycleView);
         toolbar = (Toolbar) v.findViewById(R.id.toolbar);
-//        toolbar.setTitle("Channels");
+        toolbar.setTitle("Long Beach Social");
         toolbar.setEnabled(false);
 
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
@@ -313,7 +314,6 @@ public class ChannelListFragment extends Fragment{
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
-        //TODO: hide keyboard after search enter
         MenuItem searchItem = menu.findItem(R.id.action_search);
         //SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 
@@ -354,22 +354,4 @@ public class ChannelListFragment extends Fragment{
 
 
 
-    public static class Chanel {
-        //TODO: Fix this
-        public int users;
-        public String summary;
-
-        @Override
-        public String toString() {
-            return users + " " + summary;
-        }
-
-        public int getUsers() {
-            return users;
-        }
-
-        public String getSummary() {
-            return summary;
-        }
-    }
 }

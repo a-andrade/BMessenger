@@ -7,10 +7,21 @@ import java.util.ArrayList;
  */
 
 public class Channel {
-    ArrayList<Message> messageList;
-    ArrayList<User> userList;
-    String id;
-    String name;
 
+    public int users;
+    public String summary;
+
+    @Override
+    public String toString() {
+        return users + " " + summary;
+    }
+
+    public int getUsers() {
+        return users;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
 
 }
