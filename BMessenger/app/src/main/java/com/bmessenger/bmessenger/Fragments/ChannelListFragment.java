@@ -79,12 +79,19 @@ public class ChannelListFragment extends Fragment{
         basicChannelQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG, "onChildAdded " + dataSnapshot.getValue(Channel.class).toString());
+                Log.d(TAG, "onChildAdded " + dataSnapshot.getKey() + " "  + dataSnapshot.getValue(Channel.class).toString() + " " + dataSnapshot.getKey().toString().equalsIgnoreCase("General"));
                 progressBar.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 floatingActionButton.setVisibility(View.VISIBLE);
                 toolbar.setEnabled(true);
-                if(dataSnapshot.getValue(Channel.class).getUsers() == 0) {
+
+                if(dataSnapshot.getKey().toString().equalsIgnoreCase("General")) {
+                    Log.d(TAG, dataSnapshot.getKey().toString() + " " + dataSnapshot.getValue().toString());
+
+                    basicChannelList.add(0, new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Channel.class).getSummary(), dataSnapshot.getValue(Channel.class).getUsers()));
+                    adapter.notifyItemInserted(0);
+                }
+                else if (dataSnapshot.getValue(Channel.class).getUsers() == 0) {
                     basicChannelList.add(new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Channel.class).getSummary(), dataSnapshot.getValue(Channel.class).getUsers()));
                     adapter.notifyItemInserted(basicChannelList.size() - 1);
 
@@ -92,12 +99,6 @@ public class ChannelListFragment extends Fragment{
                         recyclerView.scrollToPosition(basicChannelList.size() -1);
                         recentlyAddedChannel = null;
                     }
-
-
-                }
-                else if(dataSnapshot.getKey().toString().equalsIgnoreCase("General")) {
-                    basicChannelList.add(0, new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Channel.class).getSummary(), dataSnapshot.getValue(Channel.class).getUsers()));
-                    adapter.notifyItemInserted(0);
                 }
                 else {
 

@@ -1,12 +1,14 @@
 package com.bmessenger.bmessenger.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewGroupCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -31,7 +33,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginActivity extends AppCompatActivity implements IRequestListener {
     //TODO: log usernames to keep them unique
-
+    //TODO: dont enable ok unless input is more than 3 character on dialog
     private final String TAG = "bmessenger.Login";
     private Button createUsernameButton;
     private Button getRandomUsernameButton;
@@ -53,7 +55,8 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
         createUsernameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    UsernameDialog newDialog = new UsernameDialog();
+                    final UsernameDialog newDialog = new UsernameDialog();
+
                     newDialog.show(getSupportFragmentManager(), "missiles");
 
 
@@ -69,6 +72,7 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
 
             }
         });
+
 
 
 

@@ -1,9 +1,14 @@
 package com.bmessenger.bmessenger.Activities;
 
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.bmessenger.bmessenger.Fragments.ChannelListFragment;
+import com.bmessenger.bmessenger.Fragments.LoginFragment;
 import com.bmessenger.bmessenger.Services.LocationProvider;
 
 /**
@@ -11,6 +16,7 @@ import com.bmessenger.bmessenger.Services.LocationProvider;
  */
 
 public class ChannelListActivity extends SingleFragmentActivity {
+
 
     private final String TAG = "ChannelListActivity";
 
@@ -24,7 +30,6 @@ public class ChannelListActivity extends SingleFragmentActivity {
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
-
     }
 
     @Override
@@ -33,5 +38,24 @@ public class ChannelListActivity extends SingleFragmentActivity {
         Log.d(TAG, "onStop");
 
     }
+
+    //TODO: understand this
+    @Override
+    public void onLocationChanged(Location location) {
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+    }
+
+
 
 }

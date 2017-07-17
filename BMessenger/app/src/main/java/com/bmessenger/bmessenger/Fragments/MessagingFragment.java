@@ -151,6 +151,12 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
     }
 
     @Override
+    public void onPause() {
+        Log.d(TAG, "onPAuse");
+        super.onPause();
+    }
+
+    @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
         Intent intent  = new Intent(getActivity(), ChannelRemoveUserService.class);

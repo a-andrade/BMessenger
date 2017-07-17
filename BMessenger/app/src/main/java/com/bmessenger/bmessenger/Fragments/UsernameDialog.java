@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -26,7 +27,6 @@ import java.util.regex.Pattern;
 public class UsernameDialog extends DialogFragment {
 
     //TODO: fix ui for this fragment
-    //TODO: fix ok button until after its ok
     private TextView noticeTextView;
     private EditText mDialogEditText;
 
@@ -35,7 +35,6 @@ public class UsernameDialog extends DialogFragment {
 
         View v = getActivity().getLayoutInflater()
                 .inflate(R.layout.dialog_signin, null);
-        noticeTextView = (TextView)v.findViewById(R.id.dialog_TextView);
         mDialogEditText = (EditText)v.findViewById(R.id.username_EditText);
 
 
@@ -47,6 +46,7 @@ public class UsernameDialog extends DialogFragment {
 
         final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setView(v)
+                .setTitle(R.string.dialog_notice)
                 .setPositiveButton(
                         android.R.string.ok,
                         new DialogInterface.OnClickListener() {
@@ -60,6 +60,7 @@ public class UsernameDialog extends DialogFragment {
                             }
 
                         })
+
                 .setNegativeButton(
                         android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
@@ -68,10 +69,11 @@ public class UsernameDialog extends DialogFragment {
                                 UsernameDialog.this.getDialog().cancel();
                             }
                         }
-
                 )
-                .create();
+                .show();
 
+        ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+                .setEnabled(false);
 
 
         mDialogEditText.addTextChangedListener(new TextWatcher() {
@@ -83,7 +85,7 @@ public class UsernameDialog extends DialogFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!Pattern.matches("^[a-z0-9_-]{3,15}$", s.toString())) {
-                    mDialogEditText.setError("Username must only contain alphanumeric characters");
+                    mDialogEditText.setError("Username must be one word containing only letters or numbers");
                 }
                 else
                     ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
@@ -94,7 +96,6 @@ public class UsernameDialog extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
                 if(s.length() > 2) {
                     alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
                             .setEnabled(true);
@@ -104,7 +105,6 @@ public class UsernameDialog extends DialogFragment {
                             .setEnabled(false);
             }
         });
-
        return  alertDialog;
     }
 }

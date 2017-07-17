@@ -5,15 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.location.GnssStatus;
 import android.location.GpsStatus;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -29,7 +25,7 @@ import com.google.android.gms.location.LocationServices;
 public class LocationProvider implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener{
 
     public abstract interface LocationCallback {
         public void handleNewLocation(Location location);
@@ -47,7 +43,6 @@ public class LocationProvider implements
     private Context mContext;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private android.location.LocationListener locationListener;
 
     public LocationProvider(Context context, LocationCallback callback) {
         mGoogleApiClient = new GoogleApiClient.Builder(context)
@@ -66,30 +61,10 @@ public class LocationProvider implements
 
         mContext = context;
 
-        locationListener = new android.location.LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
 
-            }
 
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+//        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
     public void connect() {
@@ -114,6 +89,7 @@ public class LocationProvider implements
 
 
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
         }
         //Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 //        if(location == null) {
@@ -169,7 +145,9 @@ public class LocationProvider implements
     public void onLocationChanged(Location location) {
         Log.d(TAG, "Location Changed");
         mLocationCallback.handleNewLocation(location);
+
     }
+
 
 
 }
