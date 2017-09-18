@@ -22,7 +22,7 @@ public class MessageProcessor implements PayloadProcessor {
 		// resend the incoming message.
 		CcsOutMessage outMessage = new CcsOutMessage(to, messageId, inMessage.getDataPayload());
 		String jsonRequest = MessageHelper.createJsonOutMessage(outMessage);
-		client.send(jsonRequest);
+		//client.send(jsonRequest);
 	}
 
 }

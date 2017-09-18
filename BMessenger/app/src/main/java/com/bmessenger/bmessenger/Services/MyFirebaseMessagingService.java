@@ -51,24 +51,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
-    private void showBasicNotification(String message) {
-        Intent i = new Intent(this,LoginActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,i,PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setAutoCancel(true)
-                .setContentTitle("Basic Notification")
-                .setContentText(message)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pendingIntent);
-
-        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        manager.notify(0,builder.build());
-
-    }
+//    private void showBasicNotification(String message) {
+//        Intent i = new Intent(this,LoginActivity.class);
+//        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,i,PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+//                .setAutoCancel(true)
+//                .setContentTitle("Basic Notification")
+//                .setContentText(message)
+//                .setSmallIcon(R.mipmap.bmessenger_logo)
+//                .setContentIntent(pendingIntent);
+//
+//        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//
+//        manager.notify(0,builder.build());
+//
+//    }
 
 //    public void messageReceived(String user, String message) {
 //        if(mCallbacks == null) {

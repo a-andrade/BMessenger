@@ -18,25 +18,12 @@ import com.bmessenger.bmessenger.Services.LocationProvider;
 public class ChannelListActivity extends SingleFragmentActivity {
 
 
-    private final String TAG = "ChannelListActivity";
+    private final String TAG = getClass().getSimpleName();
 
     @Override
     public Fragment createFragment() {
 
         return new ChannelListFragment();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop");
-
     }
 
     //TODO: understand this

@@ -4,6 +4,7 @@ import com.wedevol.xmpp.service.PayloadProcessor;
 import com.wedevol.xmpp.service.impl.EchoProcessor;
 import com.wedevol.xmpp.service.impl.MessageProcessor;
 import com.wedevol.xmpp.service.impl.RegisterProcessor;
+import com.wedevol.xmpp.service.impl.TopicMessageProcessor;
 import com.wedevol.xmpp.util.Util;
 
 /**
@@ -23,6 +24,8 @@ public class ProcessorFactory {
 			return new EchoProcessor();
 		} else if (action.equals(Util.BACKEND_ACTION_MESSAGE)) {
 			return new MessageProcessor();
+		} else if (action.equals(Util.BACKEND_ACTION_TOPIC_MESSAGE))  {
+			return new TopicMessageProcessor();
 		}
 		throw new IllegalStateException("ProcessorFactory: Action " + action + " is unknown");
 	}

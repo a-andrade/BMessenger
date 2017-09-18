@@ -72,7 +72,6 @@ public class ChannelListFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Log.d(TAG, String.valueOf(hasOptionsMenu()));
         basicChannelQuery = FirebaseDatabase.getInstance().getReference("channels").orderByChild("users");
 
         //TODO: Change channel order only if refresh all of recycleview
@@ -86,7 +85,6 @@ public class ChannelListFragment extends Fragment{
                 toolbar.setEnabled(true);
 
                 if(dataSnapshot.getKey().toString().equalsIgnoreCase("General")) {
-                    Log.d(TAG, dataSnapshot.getKey().toString() + " " + dataSnapshot.getValue().toString());
 
                     basicChannelList.add(0, new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Channel.class).getSummary(), dataSnapshot.getValue(Channel.class).getUsers()));
                     adapter.notifyItemInserted(0);
@@ -99,6 +97,10 @@ public class ChannelListFragment extends Fragment{
                         recyclerView.scrollToPosition(basicChannelList.size() -1);
                         recentlyAddedChannel = null;
                     }
+                }
+                else if(basicChannelList.isEmpty()) { //questionable
+                    basicChannelList.add(new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Channel.class).getSummary(), dataSnapshot.getValue(Channel.class).getUsers()));
+                    adapter.notifyItemInserted(basicChannelList.size() - 1);
                 }
                 else {
 
@@ -249,7 +251,7 @@ public class ChannelListFragment extends Fragment{
                     @Override
                     public void afterTextChanged(Editable s) {
                         Log.d(TAG, s.toString() + " " + s.length());
-                        if(!Pattern.matches( "^[a-z0-9_-]{3,16}$", s.toString())) {
+                        if(!Pattern.matches( "^[A-Za-z0-9_-]{3,15}$", s.toString())) {
                             input.setError("Channel name must be one word of 3-15 alphanumeric characters");
                             dialogInput1 = false;
                         }
@@ -353,6 +355,10 @@ public class ChannelListFragment extends Fragment{
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+    }
 
 }

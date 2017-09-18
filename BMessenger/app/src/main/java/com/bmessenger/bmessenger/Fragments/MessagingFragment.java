@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,6 +26,8 @@ import com.bmessenger.bmessenger.Services.ChannelRemoveUserService;
 import com.bmessenger.bmessenger.Utilities.Util;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.lang.reflect.Field;
 
 import static com.bmessenger.bmessenger.Utilities.Util.BACKEND_ACTION_TOPIC_MESSAGE;
 import static com.bmessenger.bmessenger.Utilities.Util.FCM_SERVER_CONNECTION;
@@ -46,15 +51,13 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         MessageControl leagueManager = MessageControl.get(getActivity());
         leagueManager.setCallback(this);
 
         mChannel = UserControl.get(getContext()).getmChannelName();
         mUser = UserControl.get(getContext()).getUserName();
-        Intent intent  = new Intent(getActivity(), ChannelAddUserService.class);
-        intent.putExtra(ChannelAddUserService.EXTRA_CHANNEL, mChannel);
-        getActivity().startService(intent);
-        FirebaseMessaging.getInstance().subscribeToTopic( mChannel);
+
 
 
     }
@@ -63,10 +66,12 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_messaging, container, false);
+        Log.d(TAG, "onCreateView");
+
         mTextView = (TextView) v.findViewById(R.id.message_list_TextView);
         mEditText = (EditText) v.findViewById(R.id.createMessage_EditText);
         mSendButton = (Button) v.findViewById(R.id.sendMessage_Button);
-
+        mSendButton.setVisibility(View.INVISIBLE);
         mScrollView = (ScrollView)v.findViewById(R.id.my_ScrollView);
 
         //Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(),  "fonts/WireOne.ttf");
@@ -84,6 +89,27 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
             }
         });
 
+        mEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length() < 1) {
+                    mSendButton.setVisibility(View.INVISIBLE);
+                }
+                else
+                    mSendButton.setVisibility(View.VISIBLE);
+            }
+        });
+
         mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -92,29 +118,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
             }
         });
 
-//        mSendButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String message = mEditText.getText().toString();
-//                String user = UserControl.get(getContext()).getUserName();;
-//                if(UserControl.get(getContext()).getUserName() == null) {
-//                    String name = Util.getAnonString();
-//                    UserControl.get(getContext()).setUsername(name);
-//                    user = name;
-//                }
-//                mEditText.setText("");
-//                //Log.d(TAG, "Message: " + message + ", recipient: " + token);
-//                FirebaseMessaging.getInstance().send(new RemoteMessage.Builder(Util.FCM_PROJECT_SENDER_ID + FCM_SERVER_CONNECTION)
-//                        .setMessageId(Integer.toString(RANDOM.nextInt()))
-//                        .addData(PAYLOAD_ATTRIBUTE_RECIPIENT, "/topics/palmyra")
-//                        .addData("user", user)
-//                        .addData("message", message)
-//                        .addData("action", BACKEND_ACTION_TOPIC_MESSAGE)
-//                        .build());
-//                // To send a message to other device through the XMPP Server, you should add the
-//                // receiverId and change the action name to BACKEND_ACTION_MESSAGE in the data
-//            }
-//        });
 
         return v;
     }
@@ -151,20 +154,51 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(TAG, "onSaveInstanceState");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Intent intent  = new Intent(getActivity(), ChannelAddUserService.class);
+        intent.putExtra(ChannelAddUserService.EXTRA_CHANNEL, mChannel);
+        getActivity().startService(intent);
+        FirebaseMessaging.getInstance().subscribeToTopic( mChannel);
+    }
+
+
+    @Override
     public void onPause() {
         Log.d(TAG, "onPAuse");
+        Intent intent  = new Intent(getActivity(), ChannelRemoveUserService.class);
+        intent.putExtra(ChannelRemoveUserService.EXTRA_CHANNEL, UserControl.get(getActivity()).getmChannelName());
+        getActivity().startService(intent);
+
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(mChannel);
         super.onPause();
     }
 
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
-        Intent intent  = new Intent(getActivity(), ChannelRemoveUserService.class);
-        intent.putExtra(ChannelRemoveUserService.EXTRA_CHANNEL, UserControl.get(getActivity()).getmChannelName());
-        getActivity().startService(intent);
 
-        FirebaseMessaging.getInstance().unsubscribeFromTopic(mChannel);
         super.onDestroy();
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

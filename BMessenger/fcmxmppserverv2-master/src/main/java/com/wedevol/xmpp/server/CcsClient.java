@@ -3,12 +3,14 @@ package com.wedevol.xmpp.server;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLSocketFactory;
 
-import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
+import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.SmackException;
@@ -23,6 +25,8 @@ import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.sm.predicates.ForEveryStanza;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.ping.PingFailedListener;
+import org.jivesoftware.smackx.ping.PingManager;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 import org.xmlpull.v1.XmlPullParser;
@@ -32,7 +36,7 @@ import com.wedevol.xmpp.bean.CcsInMessage;
 import com.wedevol.xmpp.bean.CcsOutMessage;
 import com.wedevol.xmpp.service.PayloadProcessor;
 import com.wedevol.xmpp.util.Util;
-import sun.rmi.runtime.Log;
+//import sun.rmi.runtime.Log;
 
 /**
  * Sample Smack implementation of a client for FCM Cloud Connection Server. Most
@@ -48,6 +52,7 @@ public class CcsClient implements StanzaListener {
 	private String mApiKey = null;
 	private boolean mDebuggable = false;
 	private String fcmServerUsername = null;
+	private ExecutorService executorService;
 
 	public static CcsClient getInstance() {
 		if (sInstance == null) {
@@ -70,6 +75,8 @@ public class CcsClient implements StanzaListener {
 		mApiKey = apiKey;
 		mDebuggable = debuggable;
 		fcmServerUsername = projectId + "@" + Util.FCM_SERVER_CONNECTION;
+		executorService = Executors.newFixedThreadPool(5);
+		
 	}
 
 	private CcsClient() {
@@ -88,15 +95,15 @@ public class CcsClient implements StanzaListener {
 	/**
 	 * Connects to FCM Cloud Connection Server using the supplied credentials
 	 */
-	public void connect() throws XMPPException, SmackException, IOException {
+	public void connect() throws XMPPException, SmackException, IOException, InterruptedException {
 		XMPPTCPConnection.setUseStreamManagementResumptionDefault(true);
 		XMPPTCPConnection.setUseStreamManagementDefault(true);
 
 		XMPPTCPConnectionConfiguration.Builder config = XMPPTCPConnectionConfiguration.builder();
-		config.setServiceName("FCM XMPP Client Connection Server");
+		config.setXmppDomain("FCM XMPP Client Connection Server");
 		config.setHost(Util.FCM_SERVER);
 		config.setPort(Util.FCM_PORT);
-		config.setSecurityMode(SecurityMode.ifpossible);
+		config.setSecurityMode(ConnectionConfiguration.SecurityMode.ifpossible);
 		config.setSendPresence(false);
 		config.setSocketFactory(SSLSocketFactory.getDefault());
 		// Launch a window with info about packets sent and received
@@ -104,10 +111,10 @@ public class CcsClient implements StanzaListener {
 
 		// Create the connection
 		connection = new XMPPTCPConnection(config.build());
-        logger.log(Level.INFO, "BEFORE CONNECT");
+        //logger.log(Level.INFO, "BEFORE CONNECT");
 		// Connect
 		connection.connect();
-        logger.log(Level.INFO, "AFTER CONNECT");
+        //logger.log(Level.INFO, "AFTER CONNECT");
 		// Enable automatic reconnection
 		ReconnectionManager.getInstanceFor(connection).enableAutomaticReconnection();
 
@@ -163,7 +170,6 @@ public class CcsClient implements StanzaListener {
 
 			@Override
 			public boolean accept(Stanza stanza) {
-                logger.log(Level.INFO, "STANZA LISTENER");
 				return stanza.hasExtension(Util.FCM_ELEMENT_NAME, Util.FCM_NAMESPACE);
 			}
 		});
@@ -171,10 +177,22 @@ public class CcsClient implements StanzaListener {
 		// Log all outgoing packets
 		connection.addPacketInterceptor(new StanzaListener() {
 			@Override
-			public void processPacket(Stanza stanza) throws NotConnectedException {
+			public void processStanza(Stanza stanza) throws NotConnectedException {
 				logger.log(Level.INFO, "Sent: {}", stanza.toXML());
 			}
 		}, ForEveryStanza.INSTANCE);
+		
+		
+		//Set ping interval
+		final PingManager pingManager = PingManager.getInstanceFor(connection);
+		pingManager.setPingInterval(100);
+		pingManager.registerPingFailedListener(new PingFailedListener() {
+			@Override
+			public void pingFailed() {
+				logger.info("The ping failed, restarting the ping interval again ...");
+				pingManager.setPingInterval(100);
+			}
+		});
 
 		//Make the connection
 		connection.login(fcmServerUsername, mApiKey);
@@ -186,7 +204,7 @@ public class CcsClient implements StanzaListener {
 			try {
 				connect();
 				return;
-			} catch (XMPPException | SmackException | IOException e) {
+			} catch (XMPPException | SmackException | IOException | InterruptedException e) {
 				logger.log(Level.INFO, "Connecting again to FCM (manual reconnection)");
 				try {
 					Thread.sleep(1000);
@@ -196,181 +214,194 @@ public class CcsClient implements StanzaListener {
 			}
 		}
 	}
-
+	
 	/**
 	 * Handles incoming messages
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void processPacket(Stanza packet) {
+	public void processStanza(Stanza packet) {
 		logger.log(Level.INFO, "Received: " + packet.toXML());
-		GcmPacketExtension gcmPacket = (GcmPacketExtension) packet.getExtension(Util.FCM_NAMESPACE);
-		String json = gcmPacket.getJson();
-		try {
-			Map<String, Object> jsonMap = (Map<String, Object>) JSONValue.parseWithException(json);
-			Object messageType = jsonMap.get("message_type");
-
-			if (messageType == null) {
-				CcsInMessage inMessage = MessageHelper.createCcsInMessage(jsonMap);
-				handleUpstreamMessage(inMessage); // normal upstream message
-				return;
-			}
-
-			switch (messageType.toString()) {
-			case "ack":
-				handleAckReceipt(jsonMap);
-				break;
-			case "nack":
-				handleNackReceipt(jsonMap);
-				break;
-			case "receipt":
-				handleDeliveryReceipt(jsonMap);
-				break;
-			case "control":
-				handleControlMessage(jsonMap);
-				break;
-			default:
-				logger.log(Level.INFO, "Received unknown FCM message type: " + messageType.toString());
-			}
-		} catch (ParseException e) {
-			logger.log(Level.INFO, "Error parsing JSON: " + json, e.getMessage());
-		}
-
+		
+		ClientThreadHelper threadHelper = new ClientThreadHelper(connection, packet);
+		executorService.execute(threadHelper);
 	}
 
-	/**
-	 * Handles an upstream message from a device client through FCM
-	 */
-	private void handleUpstreamMessage(CcsInMessage inMessage) {
-		final String action = inMessage.getDataPayload().get(Util.PAYLOAD_ATTRIBUTE_ACTION);
-		if (action != null) {
-			PayloadProcessor processor = ProcessorFactory.getProcessor(action);
-			processor.handleMessage(inMessage);
-		}
 
-		// Send ACK to FCM
-		String ack = MessageHelper.createJsonAck(inMessage.getFrom(), inMessage.getMessageId());
-		send(ack);
-	}
-
-	/**
-	 * Handles an ACK message from FCM
-	 */
-	private void handleAckReceipt(Map<String, Object> jsonMap) {
-		// TODO: handle the ACK in the proper way
-	}
-
-	/**
-	 * Handles a NACK message from FCM
-	 */
-	private void handleNackReceipt(Map<String, Object> jsonMap) {
-		String errorCode = (String) jsonMap.get("error");
-
-		if (errorCode == null) {
-			logger.log(Level.INFO, "Received null FCM Error Code");
-			return;
-		}
-
-		switch (errorCode) {
-		case "INVALID_JSON":
-			handleUnrecoverableFailure(jsonMap);
-			break;
-		case "BAD_REGISTRATION":
-			handleUnrecoverableFailure(jsonMap);
-			break;
-		case "DEVICE_UNREGISTERED":
-			handleUnrecoverableFailure(jsonMap);
-			break;
-		case "BAD_ACK":
-			handleUnrecoverableFailure(jsonMap);
-			break;
-		case "SERVICE_UNAVAILABLE":
-			handleServerFailure(jsonMap);
-			break;
-		case "INTERNAL_SERVER_ERROR":
-			handleServerFailure(jsonMap);
-			break;
-		case "DEVICE_MESSAGE_RATE_EXCEEDED":
-			handleUnrecoverableFailure(jsonMap);
-			break;
-		case "TOPICS_MESSAGE_RATE_EXCEEDED":
-			handleUnrecoverableFailure(jsonMap);
-			break;
-		case "CONNECTION_DRAINING":
-			handleConnectionDrainingFailure();
-			break;
-		default:
-			logger.log(Level.INFO, "Received unknown FCM Error Code: " + errorCode);
-		}
-	}
-
-	/**
-	 * Handles a Delivery Receipt message from FCM (when a device confirms that
-	 * it received a particular message)
-	 */
-	private void handleDeliveryReceipt(Map<String, Object> jsonMap) {
-		// TODO: handle the delivery receipt
-	}
-
-	/**
-	 * Handles a Control message from FCM
-	 */
-	private void handleControlMessage(Map<String, Object> jsonMap) {
-		// TODO: handle the control message
-		String controlType = (String) jsonMap.get("control_type");
-
-		if (controlType.equals("CONNECTION_DRAINING")) {
-			handleConnectionDrainingFailure();
-		} else {
-			logger.log(Level.INFO, "Received unknown FCM Control message: " + controlType);
-		}
-	}
-
-	private void handleServerFailure(Map<String, Object> jsonMap) {
-		// TODO: Resend the message
-		logger.log(Level.INFO, "Server error: " + jsonMap.get("error") + " -> " + jsonMap.get("error_description"));
-
-	}
-
-	private void handleUnrecoverableFailure(Map<String, Object> jsonMap) {
-		// TODO: handle the unrecoverable failure
-		logger.log(Level.INFO,
-				"Unrecoverable error: " + jsonMap.get("error") + " -> " + jsonMap.get("error_description"));
-	}
-
-	private void handleConnectionDrainingFailure() {
-		// TODO: handle the connection draining failure. Force reconnect?
-		logger.log(Level.INFO, "FCM Connection is draining! Initiating reconnection ...");
-	}
-
-	/**
-	 * Sends a downstream message to FCM
-	 */
-	public void send(String jsonRequest) {
-		// TODO: Resend the message using exponential back-off!
-		Stanza request = new GcmPacketExtension(jsonRequest).toPacket();
-		try {
-			logger.log(Level.INFO, "SENDING STANZA", "SEND");
-			System.out.println(request.toXML());
-			connection.sendStanza(request);
-		} catch (NotConnectedException e) {
-			logger.log(Level.INFO, "There is no connection and the packet could not be sent: {}", request.toXML());
-		}
-	}
-
-	/**
-	 * Sends a message to multiple recipients (list). Kind of like the old HTTP
-	 * message with the list of regIds in the "registration_ids" field.
-	 */
-	public void sendBroadcast(CcsOutMessage outMessage, List<String> recipients) {
-		Map<String, Object> map = MessageHelper.createAttributeMap(outMessage);
-		for (String toRegId : recipients) {
-			String messageId = Util.getUniqueMessageId();
-			map.put("message_id", messageId);
-			map.put("to", toRegId);
-			String jsonRequest = MessageHelper.createJsonMessage(map);
-			send(jsonRequest);
-		}
-	}
+//	/**
+//	 * Handles incoming messages
+//	 */
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public void processStanza(Stanza packet) {
+//		logger.log(Level.INFO, "Received: " + packet.toXML());
+//		GcmPacketExtension gcmPacket = (GcmPacketExtension) packet.getExtension(Util.FCM_NAMESPACE);
+//		String json = gcmPacket.getJson();
+//		try {
+//			Map<String, Object> jsonMap = (Map<String, Object>) JSONValue.parseWithException(json);
+//			Object messageType = jsonMap.get("message_type");
+//
+//			if (messageType == null) {
+//				CcsInMessage inMessage = MessageHelper.createCcsInMessage(jsonMap);
+//				handleUpstreamMessage(inMessage); // normal upstream message
+//				return;
+//			}
+//
+//			switch (messageType.toString()) {
+//			case "ack":
+//				handleAckReceipt(jsonMap);
+//				break;
+//			case "nack":
+//				handleNackReceipt(jsonMap);
+//				break;
+//			case "receipt":
+//				handleDeliveryReceipt(jsonMap);
+//				break;
+//			case "control":
+//				handleControlMessage(jsonMap);
+//				break;
+//			default:
+//				logger.log(Level.INFO, "Received unknown FCM message type: " + messageType.toString());
+//			}
+//		} catch (ParseException e) {
+//			logger.log(Level.INFO, "Error parsing JSON: " + json, e.getMessage());
+//		}
+//
+//	}
+//
+//	/**
+//	 * Handles an upstream message from a device client through FCM
+//	 */
+//	private void handleUpstreamMessage(CcsInMessage inMessage) {
+//		final String action = inMessage.getDataPayload().get(Util.PAYLOAD_ATTRIBUTE_ACTION);
+//		if (action != null) {
+//			PayloadProcessor processor = ProcessorFactory.getProcessor(action);
+//			processor.handleMessage(inMessage);
+//		}
+//
+//		// Send ACK to FCM
+//		String ack = MessageHelper.createJsonAck(inMessage.getFrom(), inMessage.getMessageId());
+//		send(ack);
+//	}
+//
+//	/**
+//	 * Handles an ACK message from FCM
+//	 */
+//	private void handleAckReceipt(Map<String, Object> jsonMap) {
+//		// TODO: handle the ACK in the proper way
+//	}
+//
+//	/**
+//	 * Handles a NACK message from FCM
+//	 */
+//	private void handleNackReceipt(Map<String, Object> jsonMap) {
+//		String errorCode = (String) jsonMap.get("error");
+//
+//		if (errorCode == null) {
+//			logger.log(Level.INFO, "Received null FCM Error Code");
+//			return;
+//		}
+//
+//		switch (errorCode) {
+//		case "INVALID_JSON":
+//			handleUnrecoverableFailure(jsonMap);
+//			break;
+//		case "BAD_REGISTRATION":
+//			handleUnrecoverableFailure(jsonMap);
+//			break;
+//		case "DEVICE_UNREGISTERED":
+//			handleUnrecoverableFailure(jsonMap);
+//			break;
+//		case "BAD_ACK":
+//			handleUnrecoverableFailure(jsonMap);
+//			break;
+//		case "SERVICE_UNAVAILABLE":
+//			handleServerFailure(jsonMap);
+//			break;
+//		case "INTERNAL_SERVER_ERROR":
+//			handleServerFailure(jsonMap);
+//			break;
+//		case "DEVICE_MESSAGE_RATE_EXCEEDED":
+//			handleUnrecoverableFailure(jsonMap);
+//			break;
+//		case "TOPICS_MESSAGE_RATE_EXCEEDED":
+//			handleUnrecoverableFailure(jsonMap);
+//			break;
+//		case "CONNECTION_DRAINING":
+//			handleConnectionDrainingFailure();
+//			break;
+//		default:
+//			logger.log(Level.INFO, "Received unknown FCM Error Code: " + errorCode);
+//		}
+//	}
+//
+//	/**
+//	 * Handles a Delivery Receipt message from FCM (when a device confirms that
+//	 * it received a particular message)
+//	 */
+//	private void handleDeliveryReceipt(Map<String, Object> jsonMap) {
+//		// TODO: handle the delivery receipt
+//	}
+//
+//	/**
+//	 * Handles a Control message from FCM
+//	 */
+//	private void handleControlMessage(Map<String, Object> jsonMap) {
+//		// TODO: handle the control message
+//		String controlType = (String) jsonMap.get("control_type");
+//
+//		if (controlType.equals("CONNECTION_DRAINING")) {
+//			handleConnectionDrainingFailure();
+//		} else {
+//			logger.log(Level.INFO, "Received unknown FCM Control message: " + controlType);
+//		}
+//	}
+//
+//	private void handleServerFailure(Map<String, Object> jsonMap) {
+//		// TODO: Resend the message
+//		logger.log(Level.INFO, "Server error: " + jsonMap.get("error") + " -> " + jsonMap.get("error_description"));
+//
+//	}
+//
+//	private void handleUnrecoverableFailure(Map<String, Object> jsonMap) {
+//		// TODO: handle the unrecoverable failure
+//		logger.log(Level.INFO,
+//				"Unrecoverable error: " + jsonMap.get("error") + " -> " + jsonMap.get("error_description"));
+//	}
+//
+//	private void handleConnectionDrainingFailure() {
+//		// TODO: handle the connection draining failure. Force reconnect?
+//		logger.log(Level.INFO, "FCM Connection is draining! Initiating reconnection ...");
+//	}
+//
+//	/**
+//	 * Sends a downstream message to FCM
+//	 */
+//	public void send(String jsonRequest) {
+//		// TODO: Resend the message using exponential back-off!
+//		Stanza request = new GcmPacketExtension(jsonRequest).toPacket();
+//		try {
+//			logger.log(Level.INFO, "SENDING STANZA", "SEND");
+//			System.out.println(request.toXML());
+//			connection.sendStanza(request);
+//		} catch (NotConnectedException | InterruptedException e) {
+//			logger.log(Level.INFO, "There is no connection and the packet could not be sent: {}", request.toXML());
+//		}
+//	}
+//
+//	/**
+//	 * Sends a message to multiple recipients (list). Kind of like the old HTTP
+//	 * message with the list of regIds in the "registration_ids" field.
+//	 */
+//	public void sendBroadcast(CcsOutMessage outMessage, List<String> recipients) {
+//		Map<String, Object> map = MessageHelper.createAttributeMap(outMessage);
+//		for (String toRegId : recipients) {
+//			String messageId = Util.getUniqueMessageId();
+//			map.put("message_id", messageId);
+//			map.put("to", toRegId);
+//			String jsonRequest = MessageHelper.createJsonMessage(map);
+//			send(jsonRequest);
+//		}
+//	}
 
 }

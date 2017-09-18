@@ -1,8 +1,6 @@
 package com.bmessenger.bmessenger.Activities;
 
 import android.content.Context;
-import android.location.GnssStatus;
-import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -17,6 +15,8 @@ import com.bmessenger.bmessenger.Fragments.DisabledDialog;
 import com.bmessenger.bmessenger.Manager.MessageControl;
 import com.bmessenger.bmessenger.R;
 import com.bmessenger.bmessenger.Services.LocationProvider;
+import com.google.android.gms.location.LocationServices;
+import com.squareup.leakcanary.LeakCanary;
 
 
 /**
@@ -25,9 +25,11 @@ import com.bmessenger.bmessenger.Services.LocationProvider;
 
 
 public abstract class SingleFragmentActivity extends AppCompatActivity implements LocationProvider.LocationCallback, LocationListener {
-    private final String TAG = getClass().getName().toString();
+    private final String TAG = getClass().getSimpleName().toString();
     private LocationProvider mService;
     protected abstract Fragment createFragment();
+    protected LocationManager lm;
+    protected LocationListener locationListener;
 
     //used to return the fragment you want to place into container
 
@@ -36,9 +38,10 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResId());
+        LeakCanary.install(getApplication());
         mService = new LocationProvider(getApplicationContext(), this);
 
         FragmentManager fm = getSupportFragmentManager();
@@ -53,38 +56,43 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
         }
 
 
-        final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        try {
-            // Define a listener that responds to location updates
-            LocationListener locationListener = new LocationListener() {
-                public void onLocationChanged(Location location) {
-                    // Called when a new location is found by the network location provider.
-                    //Log.d(TAG, "onLocationChanged " + location.getLatitude() + " " + location.getLongitude());
+        // Define a listener that responds to location updates
+        locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                // Called when a new location is found by the network location provider.
+                Log.d(TAG, "onLocationChanged from LocationListener " + location.getLatitude() + " " + location.getLongitude());
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+                Log.d(TAG, "onProviderEnabled");
+                if (savedInstanceState == null) {
+                    Log.d(TAG, "savedInstanceState is null");
+                    releaseUnavailableFrag();
                 }
+            }
 
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-                }
+            public void onProviderDisabled(String provider) {
+                Log.d(TAG, "onProviderDisabled");
+                loadUnavailableFrag();
+            }
+        };
 
-                public void onProviderEnabled(String provider) {
-                    Log.d(TAG, "onProviderEnabled");
-                    loadAvailableFrag();
-                }
+//        try {
+//
+//
+//            if (lm.getAllProviders().contains(LocationManager.GPS_PROVIDER))
+//                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+//
+//        } catch (SecurityException e) {
+//            e.printStackTrace();
+//        }
 
-                public void onProviderDisabled(String provider) {
-                    Log.d(TAG, "onProviderDisabled");
-                    loadUnavailableFrag();
-                }
-            };
-
-        // Register the listener with the Location Manager to receive location updates
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-
-        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             loadUnavailableFrag();
         }
     }
@@ -92,12 +100,12 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
 
     @Override
     public void handleNewLocation(Location location) {
-        //Log.d(TAG, location.toString());
+        Log.d(TAG, location.toString());
         //Toast.makeText(getBaseContext(), "Long: " + location.getLongitude() + " Lat: " + location.getLatitude(), Toast.LENGTH_SHORT).show();
 //        if(location.getLatitude() > 33.783877 && location.getLatitude() < 33.785
 //                && location.getLongitude() < -117.856743 && location.getLongitude() > -117.8569) {
         if(true) {
-            loadAvailableFrag();
+            releaseUnavailableFrag();
 
 
         }
@@ -107,14 +115,14 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
         }
     }
 
-    public void loadAvailableFrag() {
+    public void releaseUnavailableFrag() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if(fragmentManager.findFragmentByTag("available")  == null) {
 
             Fragment dialog = fragmentManager.findFragmentByTag("unavailable");
             if (dialog != null) {
                 DialogFragment df = (DialogFragment) dialog;
-                df.dismiss();
+                df.dismissAllowingStateLoss();
             }
         }
         else {
@@ -134,8 +142,10 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
             //check to see if we can dismiss previous transaction and just place the new one
             //if we stepped into after forefront callback then don't commit
 
-            fm.beginTransaction().add(alertDialog, "unavailable").commit();
+            fm.beginTransaction().add(alertDialog, "unavailable").commitAllowingStateLoss();
             //alertDialog.show(fm, "unavailable");
+
+            //alertDialog.show(fragmentManager, "unavailable");
         }
         else {
             Log.d(TAG, "fragmanager found that tagged frag");
@@ -162,6 +172,15 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     public void onResume() {
         super.onResume();
         mService.connect();
+        try {
+
+
+            if (lm.getAllProviders().contains(LocationManager.GPS_PROVIDER))
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
         Log.d(TAG, "onResume");
     }
 
@@ -169,13 +188,13 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     public void onPause() {
         super.onPause();
         mService.disconnect();
+        lm.removeUpdates(locationListener);
         Log.d(TAG, "onPause");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         Log.d(TAG, "onDestroy");
         MessageControl leagueManager = MessageControl.get(getApplicationContext());
         leagueManager.removeCallback();

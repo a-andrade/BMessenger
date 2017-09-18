@@ -84,7 +84,7 @@ public class UsernameDialog extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!Pattern.matches("^[a-z0-9_-]{3,15}$", s.toString())) {
+                if(!Pattern.matches("^[A-Za-z0-9_-]{3,15}$", s.toString())) {
                     mDialogEditText.setError("Username must be one word containing only letters or numbers");
                 }
                 else

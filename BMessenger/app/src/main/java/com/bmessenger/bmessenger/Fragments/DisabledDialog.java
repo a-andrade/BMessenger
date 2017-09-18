@@ -23,7 +23,7 @@ public class DisabledDialog extends DialogFragment {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(title);
         alertDialogBuilder.setMessage("Long Beach Social is for users on campus only. To continue" +
-                "using this service make sure Location is enabled and get back on campus.");
+                " using this service make sure Location is enabled and get back on campus.");
         //alertDialogBuilder.setCancelable(false);
 
         return alertDialogBuilder.create();

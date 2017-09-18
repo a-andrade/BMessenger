@@ -33,7 +33,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginActivity extends AppCompatActivity implements IRequestListener {
     //TODO: log usernames to keep them unique
-    //TODO: dont enable ok unless input is more than 3 character on dialog
     private final String TAG = "bmessenger.Login";
     private Button createUsernameButton;
     private Button getRandomUsernameButton;
