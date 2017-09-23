@@ -1,8 +1,12 @@
 package com.bmessenger.bmessenger.Manager;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.widget.Toast;
 
 import com.bmessenger.bmessenger.Models.User;
+
+import java.util.Random;
 
 /**
  * Created by uli on 11/14/2016.
@@ -12,11 +16,11 @@ public class UserControl {
     private static UserControl sUserControl;
     private Context mAppContext;
 
-    private User mUser;
-    String mUsername;
+    private int mUserColor = -1;
+    private String mUsername;
 
 
-    String mChannelName;
+    private String mChannelName;
 
     private UserControl(Context context) {
         mAppContext = context;
@@ -44,5 +48,19 @@ public class UserControl {
 
     public void setmChannelName(String mChannelName) {
         this.mChannelName = mChannelName;
+    }
+
+    public int getUserColor() {
+        if(mUserColor == -1) {
+            setRandomColor();
+        }
+        return mUserColor;
+    }
+
+    public void setRandomColor() {
+        Random rnd = new Random();
+        mUserColor = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+        //Toast.makeText(mAppContext, mUserColor + " ", Toast.LENGTH_SHORT).show();
+
     }
 }

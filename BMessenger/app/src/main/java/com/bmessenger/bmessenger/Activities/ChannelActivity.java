@@ -23,21 +23,21 @@ public class ChannelActivity extends SingleFragmentActivity{
         return new LoginFragment();
     }
 
-
-    @Override
-    public void onLocationChanged(Location location) {
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-    }
+//
+//    @Override
+//    public void onLocationChanged(Location location) {
+//    }
+//
+//    @Override
+//    public void onStatusChanged(String s, int i, Bundle bundle) {
+//    }
+//
+//    @Override
+//    public void onProviderEnabled(String s) {
+//    }
+//
+//    @Override
+//    public void onProviderDisabled(String s) {
+//    }
 
 }

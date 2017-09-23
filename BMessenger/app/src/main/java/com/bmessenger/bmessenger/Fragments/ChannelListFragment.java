@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 
 import com.bmessenger.bmessenger.Adapters.ChannelAdapter;
+import com.bmessenger.bmessenger.Manager.UserControl;
 import com.bmessenger.bmessenger.Models.Channel;
 import com.bmessenger.bmessenger.Models.ChannelItem;
 import com.bmessenger.bmessenger.R;
@@ -85,8 +86,8 @@ public class ChannelListFragment extends Fragment{
                 toolbar.setEnabled(true);
 
                 if(dataSnapshot.getKey().toString().equalsIgnoreCase("General")) {
-
                     basicChannelList.add(0, new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Channel.class).getSummary(), dataSnapshot.getValue(Channel.class).getUsers()));
+                    basicChannelList.remove(1);
                     adapter.notifyItemInserted(0);
                 }
                 else if (dataSnapshot.getValue(Channel.class).getUsers() == 0) {
@@ -94,15 +95,19 @@ public class ChannelListFragment extends Fragment{
                     adapter.notifyItemInserted(basicChannelList.size() - 1);
 
                     if(recentlyAddedChannel != null) {
-                        recyclerView.scrollToPosition(basicChannelList.size() -1);
+                        recyclerView.scrollToPosition(basicChannelList.size() - 1);
                         recentlyAddedChannel = null;
                     }
                 }
                 else if(basicChannelList.isEmpty()) { //questionable
-                    basicChannelList.add(new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Channel.class).getSummary(), dataSnapshot.getValue(Channel.class).getUsers()));
+                    //Create temp General
+                    ChannelItem tempGeneral = new ChannelItem("temp", "summary", 0);
+                    basicChannelList.add(0, tempGeneral);
+                    basicChannelList.add(1, new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Channel.class).getSummary(), dataSnapshot.getValue(Channel.class).getUsers()));
                     adapter.notifyItemInserted(basicChannelList.size() - 1);
                 }
                 else {
+
 
                     basicChannelList.add(1, new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Channel.class).getSummary(), dataSnapshot.getValue(Channel.class).getUsers()));
                     adapter.notifyItemInserted(1);
@@ -251,8 +256,8 @@ public class ChannelListFragment extends Fragment{
                     @Override
                     public void afterTextChanged(Editable s) {
                         Log.d(TAG, s.toString() + " " + s.length());
-                        if(!Pattern.matches( "^[A-Za-z0-9_-]{3,15}$", s.toString())) {
-                            input.setError("Channel name must be one word of 3-15 alphanumeric characters");
+                        if(!Pattern.matches( "^[A-Za-z0-9_-]{3,24}$", s.toString())) {
+                            input.setError("Channel name must be one word of 3-24 alphanumeric characters");
                             dialogInput1 = false;
                         }
                         else
@@ -352,7 +357,21 @@ public class ChannelListFragment extends Fragment{
             };
             searchView.setOnQueryTextListener(queryTextListener);
         }
+
+
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_item_options) {
+            final UsernameDialog newDialog = new UsernameDialog();
+
+            newDialog.show(getFragmentManager(), "missiles");
+            // Do Fragment menu item stuff here
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -26,22 +26,23 @@ public class ChannelListActivity extends SingleFragmentActivity {
         return new ChannelListFragment();
     }
 
-    //TODO: understand this
-    @Override
-    public void onLocationChanged(Location location) {
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-    }
+//    //TODO: understand this
+//    @Override
+//    public void onLocationChanged(Location location) {
+//        Log.d(TAG, "onLocationChanged extra methdos?");
+//    }
+//
+//    @Override
+//    public void onStatusChanged(String s, int i, Bundle bundle) {
+//    }
+//
+//    @Override
+//    public void onProviderEnabled(String s) {
+//    }
+//
+//    @Override
+//    public void onProviderDisabled(String s) {
+//    }
 
 
 

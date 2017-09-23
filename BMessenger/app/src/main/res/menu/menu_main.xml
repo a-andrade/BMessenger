@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
         android:id="@+id/action_search"
-        android:title="@android:string/search_go"
+        android:title="@string/search_go"
         android:icon="@drawable/ic_magnify_black_24dp"
-        app:showAsAction="collapseActionView|ifRoom"
+        app:showAsAction="always"
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:visible="true"/>
+    <item
+        android:id="@+id/menu_item_options"
+        android:title="@string/menu_username"
+        android:icon="@drawable/pencil_icon_24"
+        app:showAsAction="ifRoom"
+        />
 </menu>

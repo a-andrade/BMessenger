@@ -21,7 +21,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private Callbacks mCallbacks;
 
     public interface Callbacks {
-        void messageReceived(String user, String message);
+        void messageReceived(String user, String message, String color);
     }
 
 
@@ -36,11 +36,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             // In this case the XMPP Server sends a payload data
             String message = remoteMessage.getData().get("message");
             String user = remoteMessage.getData().get("user");
+            String color = remoteMessage.getData().get("color");
             Log.d(TAG, "Message received: " + message);
             Log.d(TAG, "User was: " + user);
+            Log.d(TAG, "color was: " + color);
 
             MessageControl messageControl = MessageControl.get(getApplicationContext());
-            messageControl.onMessageReceived(user, message);
+            messageControl.onMessageReceived(user, message, color);
             //showBasicNotification(message);
         }
 

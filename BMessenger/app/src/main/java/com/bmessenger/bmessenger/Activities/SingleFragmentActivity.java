@@ -15,8 +15,8 @@ import com.bmessenger.bmessenger.Fragments.DisabledDialog;
 import com.bmessenger.bmessenger.Manager.MessageControl;
 import com.bmessenger.bmessenger.R;
 import com.bmessenger.bmessenger.Services.LocationProvider;
-import com.google.android.gms.location.LocationServices;
-import com.squareup.leakcanary.LeakCanary;
+//import com.google.android.gms.location.LocationServices;
+//import com.squareup.leakcanary.LeakCanary;
 
 
 /**
@@ -24,7 +24,7 @@ import com.squareup.leakcanary.LeakCanary;
  */
 
 
-public abstract class SingleFragmentActivity extends AppCompatActivity implements LocationProvider.LocationCallback, LocationListener {
+public abstract class SingleFragmentActivity extends AppCompatActivity implements LocationProvider.LocationCallback{
     private final String TAG = getClass().getSimpleName().toString();
     private LocationProvider mService;
     protected abstract Fragment createFragment();
@@ -41,7 +41,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResId());
-        LeakCanary.install(getApplication());
+        //LeakCanary.install(getApplication());
         mService = new LocationProvider(getApplicationContext(), this);
 
         FragmentManager fm = getSupportFragmentManager();
@@ -56,7 +56,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
         }
 
 
-         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+         lm = (LocationManager) getSystemService(getApplicationContext().LOCATION_SERVICE);
 
         // Define a listener that responds to location updates
         locationListener = new LocationListener() {
@@ -102,16 +102,13 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     public void handleNewLocation(Location location) {
         Log.d(TAG, location.toString());
         //Toast.makeText(getBaseContext(), "Long: " + location.getLongitude() + " Lat: " + location.getLatitude(), Toast.LENGTH_SHORT).show();
-//        if(location.getLatitude() > 33.783877 && location.getLatitude() < 33.785
-//                && location.getLongitude() < -117.856743 && location.getLongitude() > -117.8569) {
-        if(true) {
+        if(location.getLatitude() > 33.773743 && location.getLatitude() < 33.789134
+                && location.getLongitude() > -118.124241 && location.getLongitude() < -118.106882) {
+//        if(true) {
             releaseUnavailableFrag();
-
-
         }
         else {
             loadUnavailableFrag();
-
         }
     }
 
@@ -157,20 +154,6 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop");
-
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
         mService.connect();
         try {
 
@@ -181,14 +164,30 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
         } catch (SecurityException e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+        mService.disconnect();
+        lm.removeUpdates(locationListener);
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
         Log.d(TAG, "onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mService.disconnect();
-        lm.removeUpdates(locationListener);
+
         Log.d(TAG, "onPause");
     }
 
@@ -196,8 +195,10 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
+
         MessageControl leagueManager = MessageControl.get(getApplicationContext());
         leagueManager.removeCallback();
+
     }
 
 }

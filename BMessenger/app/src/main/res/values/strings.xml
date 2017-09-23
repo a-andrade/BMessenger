@@ -15,5 +15,8 @@
     <string name="addChannel">Add Channel</string>
     <string name="create_username">create username</string>
     <string name="search_label">search Label</string>
+    <string name="menu_username">Edit Username</string>
+    <string name="menu_colors">Reroll User Color</string>
+    <string name="search_go">Search</string>
 
 </resources>
