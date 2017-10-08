@@ -1,8 +1,10 @@
 package com.bmessenger.bmessenger.Fragments;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bmessenger.bmessenger.Activities.ChannelListActivity;
 import com.bmessenger.bmessenger.Manager.UserControl;
@@ -37,8 +40,6 @@ public class UsernameDialog extends DialogFragment {
                 .inflate(R.layout.dialog_signin, null);
         mDialogEditText = (EditText)v.findViewById(R.id.username_EditText);
 
-
-
 //        Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(),
 //                "fonts/WireOne.ttf");
 
@@ -54,6 +55,9 @@ public class UsernameDialog extends DialogFragment {
                                 if(mDialogEditText.getText() != null) {
                                     UserControl.get(getContext())
                                             .setUsername(mDialogEditText.getText().toString());
+                                    saveUsername(mDialogEditText.getText().toString());
+//                                    UsernameDialog.this.getDialog().dismiss();
+                                    //check parent fragment; if login start activity, else dismiss
                                     Intent i = new Intent(getContext(), ChannelListActivity.class);
                                     startActivity(i);
                                 }
@@ -107,4 +111,12 @@ public class UsernameDialog extends DialogFragment {
         });
        return  alertDialog;
     }
+
+    private void saveUsername(String username) {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.preference_username), username);
+        editor.apply();
+    }
+
 }

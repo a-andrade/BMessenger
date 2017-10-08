@@ -27,8 +27,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
+import com.bmessenger.bmessenger.Activities.SettingsActivity;
 import com.bmessenger.bmessenger.Adapters.ChannelAdapter;
-import com.bmessenger.bmessenger.Manager.UserControl;
 import com.bmessenger.bmessenger.Models.Channel;
 import com.bmessenger.bmessenger.Models.ChannelItem;
 import com.bmessenger.bmessenger.R;
@@ -154,7 +154,7 @@ public class ChannelListFragment extends Fragment{
         toolbar.setEnabled(false);
 
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        //toolbar.inflateMenu(R.menu.menu_main);
+        //toolbar.inflateMenu(R.menu.menu_channels);
 
         floatingActionButton = (FloatingActionButton) v.findViewById(R.id.channels_floatingButton);
         progressBar = (ProgressBar) v.findViewById(R.id.channelList_progressBar);
@@ -321,7 +321,7 @@ public class ChannelListFragment extends Fragment{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_channels, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         //SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 
@@ -362,17 +362,31 @@ public class ChannelListFragment extends Fragment{
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_item_options) {
-            final UsernameDialog newDialog = new UsernameDialog();
-
-            newDialog.show(getFragmentManager(), "missiles");
+            Intent intent = new Intent(getContext(), SettingsActivity.class);
+              startActivity(intent);
             // Do Fragment menu item stuff here
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+//    public void showDialog() {
+//        FragmentManager fragmentManager = getFragmentManager();
+//        SettingsDialog newFragment = new SettingsDialog();
+//
+//
+//        // The device is smaller, so show the fragment fullscreen
+//        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//        // For a little polish, specify a transition animation
+//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//        // To make it fullscreen, use the 'content' root view as the container
+//        // for the fragment, which is always the root view for the activity
+//        transaction.add(R.layout.fragment_channel_list, newFragment).addToBackStack(null).commit();
+//    }
 
     @Override
     public void onPause() {

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.widget.Toast;
 
 import com.bmessenger.bmessenger.Models.User;
+import com.bmessenger.bmessenger.Utilities.Util;
 
 import java.util.Random;
 
@@ -16,7 +17,7 @@ public class UserControl {
     private static UserControl sUserControl;
     private Context mAppContext;
 
-    private int mUserColor = -1;
+    private String mUserColor = null;
     private String mUsername;
 
 
@@ -39,7 +40,12 @@ public class UserControl {
     }
 
     public String getUserName() {
-        return mUsername;
+        if(mUsername == null) {
+            mUsername = Util.getAnonString();
+            return mUsername;
+        }
+        else
+            return mUsername;
     }
 
     public String getmChannelName() {
@@ -50,8 +56,8 @@ public class UserControl {
         this.mChannelName = mChannelName;
     }
 
-    public int getUserColor() {
-        if(mUserColor == -1) {
+    public String getUserColor() {
+        if(mUserColor == null) {
             setRandomColor();
         }
         return mUserColor;
@@ -59,7 +65,8 @@ public class UserControl {
 
     public void setRandomColor() {
         Random rnd = new Random();
-        mUserColor = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+        mUserColor = String.format("#%02x%02x%02x", rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+        //mUserColor = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
         //Toast.makeText(mAppContext, mUserColor + " ", Toast.LENGTH_SHORT).show();
 
     }

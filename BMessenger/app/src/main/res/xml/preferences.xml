@@ -1,0 +1,59 @@
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--
+        https://android-examples.blogspot.com/2016/02/android-listpreference-example.html
+    -->
+    <PreferenceCategory android:title="Profile"
+        android:key="pref_key_storage_settings">
+        <EditTextPreference
+            android:key="@string/preference_username"
+            android:title="Edit Name"
+            android:icon="@drawable/ic_edit_black_24dp"
+            />
+        <ListPreference
+            android:key="@string/preference_user_color"
+            android:title="Foreground Color"
+            android:entries="@array/username_color_names_array"
+            android:entryValues="@array/username_color_values_array"
+            android:summary="Select a foreground color"
+            android:icon="@drawable/ic_brush_black_24dp"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="About"
+        android:key="idk">
+        <Preference
+            android:title="Privacy Policy"
+            android:icon="@drawable/ic_verified_user_black_24dp">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="http://www.longbeachsocial.com/privacy.html" />
+        </Preference>
+        <Preference
+            android:title="User Agreement"
+            android:icon="@drawable/ic_copyright_black_24dp">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="http://www.longbeachsocial.com/terms.html" />
+        </Preference>
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Support">
+        <Preference
+            android:title="Help FAQ"
+            android:icon="@drawable/ic_help_black_24dp">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="http://www.lbs.com/FAQ" />
+        </Preference>
+
+        <Preference
+            android:title="Report a bug"
+            android:icon="@drawable/ic_mail_black_24dp">
+            <intent android:action="android.intent.action.SENDTO"
+                android:data="mailto:longbeachsocialapp@gmail.com"
+                />
+        </Preference>
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

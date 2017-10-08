@@ -1,9 +1,11 @@
 package com.bmessenger.bmessenger.Fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,6 +33,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bmessenger.bmessenger.Activities.SettingsActivity;
 import com.bmessenger.bmessenger.Manager.MessageControl;
 import com.bmessenger.bmessenger.R;
 import com.bmessenger.bmessenger.Manager.UserControl;
@@ -61,7 +64,9 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
 
     private String mChannel;
     private String mUser;
+    //private int mUserColor;
     private int mUserColor;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,9 +76,9 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
         MessageControl leagueManager = MessageControl.get(getActivity());
         leagueManager.setCallback(this);
 
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
         mChannel = UserControl.get(getContext()).getmChannelName();
-        mUser = UserControl.get(getContext()).getUserName();
-        mUserColor = UserControl.get(getContext()).getUserColor();
 
 
     }
@@ -95,7 +100,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
         toolbar.setTitle(UserControl.get(getActivity()).getmChannelName());
         toolbar.setEnabled(true);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
 
         mTextView.append("Welcome to " +  UserControl.get(getActivity()).getmChannelName() +  "\n");
 
@@ -148,12 +152,9 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-       // Toast.makeText(getContext(), "item is " + item.getTitle(), Toast.LENGTH_SHORT).show();
-        if (item.getItemId() == R.id.message_menu_colors) {
-           // Toast.makeText(getContext(), "chose colors menu item", Toast.LENGTH_SHORT).show();
-            UserControl.get(getContext()).setRandomColor();
-            mUserColor = UserControl.get(getContext()).getUserColor();
-            // Do Fragment menu item stuff here
+        if (item.getItemId() == R.id.message_settings) {
+            Intent intent = new Intent(getContext(), SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -180,9 +181,9 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     public void messageReceived(String user, final String message, String color) {
         final Spannable inUser = new SpannableString(user + ": " + message);
         //final Spanned spannedString = fromHtml(inUser);
-        inUser.setSpan(new ForegroundColorSpan(Integer.parseInt(color)), 0, user.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        inUser.setSpan(new StyleSpan(Typeface.BOLD),
-                0,user.length(), 0);
+        inUser.setSpan(new ForegroundColorSpan(Integer.parseInt(color))
+                , 0, user.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        inUser.setSpan(new StyleSpan(Typeface.BOLD),0,user.length(), 0);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -216,6 +217,11 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "on RESUME ");
+        mUser = mSharedPreferences.getString(getString(R.string.preference_username), UserControl.get(getActivity()).getUserName());
+
+        mUserColor = Color.parseColor(mSharedPreferences.getString(getString(R.string.preference_user_color), UserControl.get(getContext()).getUserColor()));
+
         Intent intent  = new Intent(getActivity(), ChannelAddUserService.class);
         intent.putExtra(ChannelAddUserService.EXTRA_CHANNEL, mChannel);
         getActivity().startService(intent);
@@ -256,4 +262,6 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
             throw new RuntimeException(e);
         }
     }
+
+
 }

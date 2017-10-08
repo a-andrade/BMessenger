@@ -47,7 +47,7 @@ public class MessageControl {
     public void onMessageReceived(String user, String message, String color) {
         if(mCallbacks == null) {
             Log.d(TAG, "mCallbacks is null");
-        }
-        mCallbacks.messageReceived(user, message, color);
+        } else
+            mCallbacks.messageReceived(user, message, color);
     }
 }

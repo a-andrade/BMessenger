@@ -1,15 +1,8 @@
 package com.bmessenger.bmessenger.Activities;
 
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.bmessenger.bmessenger.Fragments.ChannelListFragment;
-import com.bmessenger.bmessenger.Fragments.LoginFragment;
-import com.bmessenger.bmessenger.Services.LocationProvider;
 
 /**
  * Created by uli on 11/14/2016.

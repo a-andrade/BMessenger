@@ -102,9 +102,9 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     public void handleNewLocation(Location location) {
         Log.d(TAG, location.toString());
         //Toast.makeText(getBaseContext(), "Long: " + location.getLongitude() + " Lat: " + location.getLatitude(), Toast.LENGTH_SHORT).show();
-        if(location.getLatitude() > 33.773743 && location.getLatitude() < 33.789134
-                && location.getLongitude() > -118.124241 && location.getLongitude() < -118.106882) {
-//        if(true) {
+//        if(location.getLatitude() > 33.773743 && location.getLatitude() < 33.789134
+//                && location.getLongitude() > -118.124241 && location.getLongitude() < -118.106882) {
+        if(true) {
             releaseUnavailableFrag();
         }
         else {
