@@ -3,7 +3,9 @@ package com.bmessenger.bmessenger.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.Preference;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,16 +47,25 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
         public void onClick(View view) {
             int position = getAdapterPosition();
             if(position != RecyclerView.NO_POSITION) {
-                Intent intent = new Intent(context, MessagingActivity.class);
-                //based on item add info to intent
-                SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+//                SharedPreferences sharedPref = context.get(Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = sharedPref.edit();
+//                editor.putInt(getString(R.string.saved_high_score), newHighScore);
+//                editor.apply();
+
+//                //based on item add info to intent
+                SharedPreferences sharedPref = context.getSharedPreferences(context
+                        .getString(R.string.preference_file_key), context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(context.getString(R.string.preference_channel), nameTextView.getText().toString());
-                editor.commit();
-                UserControl.get(context).setmChannelName(nameTextView.getText().toString());
+                editor.putString(context.getString(R.string.preference_channel),
+                        nameTextView.getText().toString());
+                Log.d("ChannelAdapter", " name is " + nameTextView.getText().toString());
+                editor.apply();
+
+                //UserControl.get(context).setmChannelName(nameTextView.getText().toString());
+                Intent intent = new Intent(context, MessagingActivity.class);
                 context.startActivity(intent);
             }
-
         }
     }
 
@@ -67,17 +78,12 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
         mContext = context;
     }
 
-    private Context getContext() {
-        return  mContext;
-    }
-
     @Override
     public ChannelAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View channelView = inflater.inflate(R.layout.item_channel, parent, false);
-
         ViewHolder viewHolder = new ViewHolder(context, channelView);
         return viewHolder;
     }

@@ -43,8 +43,6 @@ import com.google.firebase.database.Query;
 import java.util.ArrayList;
 import java.util.regex.*;
 
-
-
 /**
  * Created by uli on 11/14/2016.
  */
@@ -75,7 +73,6 @@ public class ChannelListFragment extends Fragment{
         setHasOptionsMenu(true);
         basicChannelQuery = FirebaseDatabase.getInstance().getReference("channels").orderByChild("users");
 
-        //TODO: Change channel order only if refresh all of recycleview
         basicChannelQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {

@@ -1,5 +1,6 @@
 package com.bmessenger.bmessenger.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -71,15 +72,14 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate");
         setHasOptionsMenu(true);
         MessageControl leagueManager = MessageControl.get(getActivity());
         leagueManager.setCallback(this);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        mChannel = UserControl.get(getContext()).getmChannelName();
-
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key) ,Context.MODE_PRIVATE);
+        mChannel = sharedPref.getString(getString(R.string.preference_channel), null);
 
     }
 
@@ -97,11 +97,11 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
 
         //Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(),  "fonts/WireOne.ttf");
         Toolbar toolbar = (Toolbar) v.findViewById(R.id.messagesToolbar);
-        toolbar.setTitle(UserControl.get(getActivity()).getmChannelName());
+        toolbar.setTitle(mChannel);
         toolbar.setEnabled(true);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
-        mTextView.append("Welcome to " +  UserControl.get(getActivity()).getmChannelName() +  "\n");
+        mTextView.append("Welcome to " +  mChannel +  "\n");
 
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,10 +217,20 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "on RESUME ");
-        mUser = mSharedPreferences.getString(getString(R.string.preference_username), UserControl.get(getActivity()).getUserName());
+        mUser = mSharedPreferences.getString(getString(R.string.preference_username),
+                UserControl.get(getActivity()).getUserName());
 
-        mUserColor = Color.parseColor(mSharedPreferences.getString(getString(R.string.preference_user_color), UserControl.get(getContext()).getUserColor()));
+        if(mChannel == null) {
+            SharedPreferences sharedPref = getActivity()
+                    .getSharedPreferences(getString(R.string.preference_file_key)
+                            ,Context.MODE_PRIVATE);
+
+            mChannel = sharedPref.getString(getString(R.string.preference_channel), null);
+        }
+
+        mUserColor = Color.parseColor(mSharedPreferences
+                .getString(getString(R.string.preference_user_color), UserControl.get(getContext())
+                        .getUserColor()));
 
         Intent intent  = new Intent(getActivity(), ChannelAddUserService.class);
         intent.putExtra(ChannelAddUserService.EXTRA_CHANNEL, mChannel);
@@ -231,7 +241,6 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
     @Override
     public void onPause() {
-        Log.d(TAG, "onPAuse");
         Intent intent  = new Intent(getActivity(), ChannelRemoveUserService.class);
         intent.putExtra(ChannelRemoveUserService.EXTRA_CHANNEL, UserControl.get(getActivity()).getmChannelName());
         getActivity().startService(intent);
@@ -240,12 +249,6 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onPause();
     }
 
-    @Override
-    public void onDestroy() {
-        Log.d(TAG, "onDestroy");
-
-        super.onDestroy();
-    }
 
     @Override
     public void onDetach() {
