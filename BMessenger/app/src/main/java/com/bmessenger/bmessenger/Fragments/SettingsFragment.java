@@ -10,6 +10,8 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
 import com.bmessenger.bmessenger.R;
@@ -36,12 +38,16 @@ public class SettingsFragment extends PreferenceFragment {
 
         mEditText = mEditTextPreference .getEditText();
 
+
+
         mEditTextPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 mDialog = mEditTextPreference.getDialog();
                 ((android.app.AlertDialog) mDialog).getButton(AlertDialog.BUTTON_POSITIVE)
                         .setEnabled(false);
+
+                mEditText.setSingleLine(true);
 
                 mEditText.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -71,16 +77,11 @@ public class SettingsFragment extends PreferenceFragment {
                     }
                 });
 
+
+
                 return true;
             }
         });
-
-        Log.d("bmessenger.settingfrag", "edittext is null " + (mEditText == null));
-
-
-
-
-
 
 
 

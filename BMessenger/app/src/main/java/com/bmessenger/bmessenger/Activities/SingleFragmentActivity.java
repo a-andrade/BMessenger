@@ -1,20 +1,30 @@
 package com.bmessenger.bmessenger.Activities;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.bmessenger.bmessenger.Fragments.DisabledDialog;
 import com.bmessenger.bmessenger.Manager.MessageControl;
+import com.bmessenger.bmessenger.Manifest;
 import com.bmessenger.bmessenger.R;
 import com.bmessenger.bmessenger.Services.LocationProvider;
+
+import java.security.Permission;
+import java.security.Permissions;
+
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 //import com.google.android.gms.location.LocationServices;
 //import com.squareup.leakcanary.LeakCanary;
 
@@ -30,6 +40,8 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     protected abstract Fragment createFragment();
     protected LocationManager lm;
     protected LocationListener locationListener;
+
+    private static final int FINE_LOCATION_PERMISSIONS_REQUEST = 1;
 
     //used to return the fragment you want to place into container
 
@@ -149,17 +161,67 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case FINE_LOCATION_PERMISSIONS_REQUEST: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    try {
+                        if (lm.getAllProviders().contains(LocationManager.GPS_PROVIDER))
+                            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+                        releaseUnavailableFrag();
+
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    loadUnavailableFrag();
+
+                    // permission denied, Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
 
     @Override
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
         mService.connect();
+
+        if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            releaseUnavailableFrag();
+        }
+
         try {
 
+            // Here, thisActivity is the current activity
+            if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
 
-            if (lm.getAllProviders().contains(LocationManager.GPS_PROVIDER))
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{ACCESS_FINE_LOCATION},
+                        FINE_LOCATION_PERMISSIONS_REQUEST);
+            }
+            else {
+                if (lm.getAllProviders().contains(LocationManager.GPS_PROVIDER))
+                    lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            }
+
+
 
         } catch (SecurityException e) {
             e.printStackTrace();
@@ -173,9 +235,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
         Log.d(TAG, "onStop");
         mService.disconnect();
         lm.removeUpdates(locationListener);
-
     }
-
 
     @Override
     public void onResume() {

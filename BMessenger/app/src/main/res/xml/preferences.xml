@@ -12,10 +12,9 @@
             />
         <ListPreference
             android:key="@string/preference_user_color"
-            android:title="Foreground Color"
+            android:title="@string/username_color"
             android:entries="@array/username_color_names_array"
             android:entryValues="@array/username_color_values_array"
-            android:summary="Select a foreground color"
             android:icon="@drawable/ic_brush_black_24dp"
             />
     </PreferenceCategory>

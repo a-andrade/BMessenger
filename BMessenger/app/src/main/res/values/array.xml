@@ -1,69 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="username_color_names_array">
-        <item>Silver</item>
+        <item>Indian Red</item>
 
-        <item>Grey</item>
+        <item>Light Coral</item>
 
-        <item>Black</item>
+        <item>Salmon</item>
+
+        <item>Crimson</item>
 
         <item>Red</item>
 
-        <item>Maroon</item>
+        <item>Dark Red</item>
+
+        <item>Pink</item>
+
+        <item>Hot Pink</item>
+
+        <item>Deep Pink</item>
+
+        <item>Medium Violet Red</item>
+
+        <item>Coral</item>
+
+        <item>Tomato</item>
+
+        <item>Orange Red</item>
+
+        <item>Dark Orange</item>
+
+        <item>Orange</item>
+
+        <item>Gold</item>
 
         <item>Yellow</item>
 
-        <item>Olive</item>
+        <item>Peach Puff</item>
+
+        <item>Khaki</item>
+
+        <item>Dark Khaki</item>
+
+        <item>Lavender</item>
+
+        <item>Plum</item>
+
+        <item>Violet</item>
+
+        <item>Fuchsia</item>
+
+        <item>Medium Purple</item>
+
+        <item>Blue Violet</item>
+
+        <item>Dark Violet</item>
+
+        <item>Purple</item>
+
+        <item>Indigo</item>
+
+        <item>Green Yello</item>
 
         <item>Lime</item>
 
+        <item>Lime Green</item>
+
+        <item>Spring Green</item>
+
+        <item>Sea Green</item>
+
+        <item>Forest Green</item>
+
         <item>Green</item>
+
+        <item>Olive</item>
+
+        <item>Teal</item>
 
         <item>Aqua</item>
 
-        <item>Teal</item>
+        <item>Aqua Marine</item>
+
+        <item>Turquoise</item>
+
+        <item>Steel Blue</item>
+
+        <item>Dodger Blue</item>
+
+        <item>Royal Blue</item>
 
         <item>Blue</item>
 
         <item>Navy</item>
 
-        <item>Fuchsia</item>
+        <item>Rosy Brown</item>
 
-        <item>Purple</item>
+        <item>Golden Rod</item>
+
+        <item>Chocolate</item>
+
+        <item>Brown</item>
+
+        <item>Maroon</item>
+
+        <item>Silver</item>
+
+        <item>Dark Gray</item>
+
+        <item>Dark Slate Gray</item>
+
+        <item>Black</item>
+
 
     </string-array>
 
     <!-- color values array -->
     <string-array name="username_color_values_array">
 
-        <item>#C0C0C0</item>
+        <item>#CD5C5C</item>
 
-        <item>#808080</item>
+        <item>#F08080</item>
 
-        <item>#000000</item>
+        <item>#FA8072</item>
+
+        <item>#DC143C</item>
 
         <item>#FF0000</item>
 
-        <item>#800000</item>
+        <item>#8B0000</item>
+
+        <item>#FFC0CB</item>
+
+        <item>#FF69B4</item>
+
+        <item>#FF1493</item>
+
+        <item>#C71585</item>
+
+        <item>#FF7F50</item>
+
+        <item>#FF6347</item>
+
+        <item>#FF4500</item>
+
+        <item>#FF8C00</item>
+
+        <item>#FFA500</item>
+
+        <item>#FFD700</item>
 
         <item>#FFFF00</item>
 
-        <item>#808000</item>
+        <item>#FFDAB9</item>
+
+        <item>#F0E68C</item>
+
+        <item>#BDB76B</item>
+
+        <item>#E6E6FA</item>
+
+        <item>#DDA0DD</item>
+
+        <item>#EE82EE</item>
+
+        <item>#FF00FF</item>
+
+        <item>#9370DB</item>
+
+        <item>#8A2BE2</item>
+
+        <item>#9400D3</item>
+
+        <item>#800080</item>
+
+        <item>#4B0082</item>
+
+        <item>#ADFF2F</item>
 
         <item>#00FF00</item>
 
+        <item>#32CD32</item>
+
+        <item>#00FF7F</item>
+
+        <item>#2E8B57</item>
+
+        <item>#228B22</item>
+
         <item>#008000</item>
+
+        <item>#808000</item>
+
+        <item>#008080</item>
 
         <item>#00FFFF</item>
 
-        <item>#008080</item>
+        <item>#7FFFD4</item>
+
+        <item>#40E0D0</item>
+
+        <item>#4682B4</item>
+
+        <item>#1E90FF</item>
+
+        <item>#4169E1</item>
 
         <item>#0000FF</item>
 
         <item>#000080</item>
 
-        <item>#FF00FF</item>
+        <item>#BC8F8F</item>
 
-        <item>#800080</item>
+        <item>#DAA520</item>
+
+        <item>#D2691E</item>
+
+        <item>#A52A2A</item>
+
+        <item>#800000</item>
+
+        <item>#C0C0C0</item>
+
+        <item>#A9A9A9</item>
+
+        <item>#2F4F4F</item>
+
+        <item>#000000</item>
+
     </string-array>
 </resources>

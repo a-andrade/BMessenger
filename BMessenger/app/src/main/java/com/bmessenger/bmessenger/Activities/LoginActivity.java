@@ -1,6 +1,5 @@
 package com.bmessenger.bmessenger.Activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,9 +18,13 @@ import com.bmessenger.bmessenger.Services.IRequestListener;
 import com.bmessenger.bmessenger.Utilities.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity implements IRequestListener {
     //TODO: log usernames to keep them unique
@@ -31,17 +34,20 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
     private boolean hasUsername = false;
     private SharedPreferences mSharedPreferences;
 
-    // [START declare_auth]
-    private FirebaseAuth mAuth;
-    // [END declare_auth]
+    private FirebaseAnalytics mFirebaseAnalytics;
 
-    // [START declare_auth_listener]
+    private FirebaseAuth mAuth;
+
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_login);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+
         createUsernameButton = (Button)findViewById(R.id.createUsernameButton);
         getRandomUsernameButton = (Button)findViewById(R.id.anonButton);
 
@@ -65,12 +71,8 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
 
         hasUsername = isUsernameSet();
 
-        // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
 
-        // [END initialize_auth]
-
-        // [START auth_state_listener]
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -88,15 +90,12 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
                     signInAnonymously();
 
                 }
-                // [START_EXCLUDE]
-                // [END_EXCLUDE]
             }
         };
-        // [END auth_state_listener]
+
     }
 
     private void signInAnonymously() {
-        // [START signin_anonymously]
         mAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -112,17 +111,18 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
                             if(hasUsername)
                                 startNextActivity();
                         }
-
-                        // [START_EXCLUDE]
-                        //callNextActivity();
-                        // [END_EXCLUDE]
                     }
                 });
-        // [END signin_anonymously]
-
     }
 
     private void startNextActivity() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm aaa");
+        String formattedString = simpleDateFormat.format(new Date());
+
+        Bundle bundle = new Bundle();
+        bundle.putString("time", formattedString);
+        mFirebaseAnalytics.logEvent("login", bundle);
+
         Intent i = new Intent(getApplicationContext(), ChannelListActivity.class);
         startActivity(i);
         finish();
@@ -138,16 +138,12 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
         }
     }
 
-
-    // [START on_start_add_listener]
     @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
-    // [END on_start_add_listener]
 
-    // [START on_stop_remove_listener]
     @Override
     public void onStop() {
         super.onStop();
@@ -155,7 +151,6 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
-    // [END on_stop_remove_listener]
 
     public void onComplete() {
         Log.d(TAG, "Token registration Complete");

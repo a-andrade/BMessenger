@@ -33,6 +33,7 @@ import com.bmessenger.bmessenger.Models.Channel;
 import com.bmessenger.bmessenger.Models.ChannelItem;
 import com.bmessenger.bmessenger.R;
 import com.bmessenger.bmessenger.Services.RegisterChannelService;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -66,11 +67,16 @@ public class ChannelListFragment extends Fragment{
     private SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
         basicChannelQuery = FirebaseDatabase.getInstance().getReference("channels").orderByChild("users");
 
         basicChannelQuery.addChildEventListener(new ChildEventListener() {
@@ -169,6 +175,7 @@ public class ChannelListFragment extends Fragment{
         //stickyChannelAdapter = new ChannelAdapter(getContext(), stickyChannelList);
         //stickyChannelRecyclerView.setAdapter(stickyChannelAdapter);
         //stickyChannelRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         adapter = new ChannelAdapter(getContext(), basicChannelList);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -235,8 +242,6 @@ public class ChannelListFragment extends Fragment{
                     }
                 });
                 final AlertDialog alertDialog = builder.create();
-//                        ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
-//                                .setEnabled(false);
 
 
                 input.addTextChangedListener(new TextWatcher() {
@@ -384,11 +389,5 @@ public class ChannelListFragment extends Fragment{
 //        // for the fragment, which is always the root view for the activity
 //        transaction.add(R.layout.fragment_channel_list, newFragment).addToBackStack(null).commit();
 //    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause");
-    }
 
 }
