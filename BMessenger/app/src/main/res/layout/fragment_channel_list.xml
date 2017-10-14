@@ -49,7 +49,7 @@
         android:layout_margin="16dp"
         android:visibility="gone"
         app:layout_anchorGravity="bottom|right|end"
-        app:layout_behavior="com.bmessenger.bmessenger.Utilities.ScrollFABBehavior"
+        app:layout_behavior="com.longbeachsocial.app.Utilities.ScrollFABBehavior"
         />
 
 

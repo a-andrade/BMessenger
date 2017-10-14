@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bmessenger.bmessenger">
+    package="com.longbeachsocial.app">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
-
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/lbsicon5"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -25,7 +24,7 @@
             android:resource="@color/colorAccent" />
         <!-- [END fcm_default_icon] -->
         <activity
-            android:name=".Activities.LoginActivity"
+            android:name="com.longbeachsocial.app.Activities.LoginActivity"
             android:screenOrientation="portrait"
             >
             <intent-filter>
@@ -34,18 +33,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.ChannelListActivity"
+        <activity android:name="com.longbeachsocial.app.Activities.ChannelListActivity"
             android:screenOrientation="portrait"
             />
-        <activity android:name=".Activities.SettingsActivity"
+        <activity android:name="com.longbeachsocial.app.Activities.SettingsActivity"
             android:screenOrientation="portrait"
             />
-        <activity android:name=".Activities.MessagingActivity"
+        <activity android:name="com.longbeachsocial.app.Activities.MessagingActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
         <!-- [START firebase_service] -->
         <service
-            android:name=".Services.MyFirebaseMessagingService">
+            android:name="com.longbeachsocial.app.Services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
@@ -53,20 +52,19 @@
         <!-- [END firebase_service] -->
         <!-- [START firebase_iid_service] -->
         <service
-            android:name=".Services.MyFirebaseInstanceIDService">
+            android:name="com.longbeachsocial.app.Services.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
-        <!-- [END firebase_iid_service] -->
 
         <service
-            android:name=".Services.ChannelAddUserService"
+            android:name="com.longbeachsocial.app.Services.ChannelAddUserService"
             android:exported="false"/>
         <service
-            android:name=".Services.RegisterChannelService"
+            android:name="com.longbeachsocial.app.Services.RegisterChannelService"
             android:exported="false"/>
-        <service android:name=".Services.ChannelRemoveUserService"
+        <service android:name="com.longbeachsocial.app.Services.ChannelRemoveUserService"
             android:exported="false" />
     </application>
 
