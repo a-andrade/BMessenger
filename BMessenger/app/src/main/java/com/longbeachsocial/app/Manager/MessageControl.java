@@ -12,7 +12,7 @@ public class MessageControl {
     private Callbacks mCallbacks;
 
     public interface Callbacks {
-        void messageReceived(String user, String message, String color);
+        void messageReceived(String user, String message, String color, String type);
     }
 
     private static MessageControl sMessageControl;
@@ -41,10 +41,10 @@ public class MessageControl {
         return sMessageControl;
     }
 
-    public void onMessageReceived(String user, String message, String color) {
+    public void onMessageReceived(String user, String message, String color, String type) {
         if(mCallbacks == null) {
             Log.d(TAG, "mCallbacks is null");
         } else
-            mCallbacks.messageReceived(user, message, color);
+            mCallbacks.messageReceived(user, message, color, type);
     }
 }

@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
+import com.google.firebase.database.DatabaseReference;
 import com.longbeachsocial.app.Activities.SettingsActivity;
 import com.longbeachsocial.app.Adapters.ChannelAdapter;
 import com.longbeachsocial.app.Models.Channel;
@@ -41,6 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.regex.*;
 
@@ -68,12 +70,17 @@ public class ChannelListFragment extends Fragment{
     private SearchView.OnQueryTextListener queryTextListener;
 
     private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseDatabase firebaseDatabase;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+
+
+
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
@@ -82,7 +89,8 @@ public class ChannelListFragment extends Fragment{
         basicChannelQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG, "onChildAdded " + dataSnapshot.getKey() + " "  + dataSnapshot.getValue(Channel.class).toString() + " " + dataSnapshot.getKey().toString().equalsIgnoreCase("General"));
+                //Log.d(TAG, "onChildAdded " + dataSnapshot.getKey() + " "  + dataSnapshot.getValue(Channel.class).toString() + " " + dataSnapshot.getKey().toString().equalsIgnoreCase("General"));
+
                 progressBar.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 floatingActionButton.setVisibility(View.VISIBLE);
@@ -143,6 +151,7 @@ public class ChannelListFragment extends Fragment{
                 Log.d(TAG, "onCancelled");
             }
         });
+
     }
 
     @Override
@@ -164,7 +173,6 @@ public class ChannelListFragment extends Fragment{
         progressBar.setVisibility(View.VISIBLE);
         progressBar.setProgress(0);
         progressBar.setIndeterminate(true);
-
 
 
         // Sets the Toolbar to act as the ActionBar for this Activity window.
@@ -203,9 +211,6 @@ public class ChannelListFragment extends Fragment{
 
                 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
                 builder.setView(viewInflated);
-
-
-
                 // Set up the buttons
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -316,6 +321,8 @@ public class ChannelListFragment extends Fragment{
 
             }
         });
+
+
 
         return v;
     }

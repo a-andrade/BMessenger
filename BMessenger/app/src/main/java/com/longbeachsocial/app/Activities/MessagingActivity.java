@@ -20,9 +20,10 @@ public class MessagingActivity  extends SingleFragmentActivity {
 
     @Override
     public void onDestroy() {
+        finish();
         super.onDestroy();
-
     }
+
 
 
 

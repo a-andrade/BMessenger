@@ -9,12 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.longbeachsocial.app.Activities.MessagingActivity;
 import com.longbeachsocial.app.Models.ChannelItem;
 import com.longbeachsocial.app.R;
 
 import java.util.List;
+
+import static java.security.AccessController.getContext;
 
 /**
  * Created by uli on 3/29/2017.
@@ -96,9 +99,9 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
 
         //RegisterChannelService channelService = new RegisterChannelService();
 
-
         textView.setText(channel.getName());
         usersView.setText(String.valueOf(channel.getUsers()));
+
         summaryView.setText(channel.getSummary());
     }
 

@@ -41,7 +41,7 @@
             android:title="Help FAQ"
             android:icon="@drawable/ic_help_black_24dp">
             <intent android:action="android.intent.action.VIEW"
-                android:data="http://www.lbs.com/FAQ" />
+                android:data="http://www.longbeachsocial.com/faq.html" />
         </Preference>
 
         <Preference

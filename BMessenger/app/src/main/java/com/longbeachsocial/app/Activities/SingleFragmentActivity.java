@@ -17,6 +17,8 @@ import com.longbeachsocial.app.Fragments.DisabledDialog;
 import com.longbeachsocial.app.Manager.MessageControl;
 import com.longbeachsocial.app.R;
 import com.longbeachsocial.app.Services.LocationProvider;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 //import com.google.android.gms.location.LocationServices;
@@ -60,6 +62,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
                     .add(R.id.fragmentContainer, fragment)
                     .commit();
         }
+
 
 
          lm = (LocationManager) getSystemService(getApplicationContext().LOCATION_SERVICE);
@@ -108,9 +111,9 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     public void handleNewLocation(Location location) {
         Log.d(TAG, location.toString());
         //Toast.makeText(getBaseContext(), "Long: " + location.getLongitude() + " Lat: " + location.getLatitude(), Toast.LENGTH_SHORT).show();
-        if(location.getLatitude() > 33.773743 && location.getLatitude() < 33.789134
-                && location.getLongitude() > -118.124241 && location.getLongitude() < -118.106882) {
-//        if(true) {
+//        if(location.getLatitude() > 33.773743 && location.getLatitude() < 33.789134
+//                && location.getLongitude() > -118.124241 && location.getLongitude() < -118.106882) {
+        if(true) {
             releaseUnavailableFrag();
         }
         else {

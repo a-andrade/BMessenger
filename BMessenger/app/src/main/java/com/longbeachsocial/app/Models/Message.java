@@ -6,14 +6,23 @@ package com.longbeachsocial.app.Models;
 
 public class Message {
 
-    String mMessage;
+    public String message;
+    public String user;
+    public String type;
+    public String color;
+    public long timestamp;
 
-    public Message(String message) {
-        mMessage = message;
+
+    public Message() {
+
     }
 
-    public String getMessage() {
-        return mMessage;
+    public Message(String message, String user, String color, String type, long timestamp) {
+        this.message = message;
+        this.user    = user;
+        this.color = color;
+        this.type = type;
+        this.timestamp = timestamp;
     }
 
 }

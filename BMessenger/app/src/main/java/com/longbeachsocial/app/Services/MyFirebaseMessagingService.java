@@ -7,6 +7,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 
 import com.google.firebase.messaging.FirebaseMessagingService;
+import com.longbeachsocial.app.Utilities.Util;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -31,12 +32,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String message = remoteMessage.getData().get("message");
             String user = remoteMessage.getData().get("user");
             String color = remoteMessage.getData().get("color");
+            String type = remoteMessage.getData().get(Util.TOPIC_MESSAGE_TYPE);
             Log.d(TAG, "Message received: " + message);
             Log.d(TAG, "User was: " + user);
             Log.d(TAG, "color was: " + color);
 
             MessageControl messageControl = MessageControl.get(getApplicationContext());
-            messageControl.onMessageReceived(user, message, color);
+            messageControl.onMessageReceived(user, message, color, type);
             //showBasicNotification(message);
         }
 
