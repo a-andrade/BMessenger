@@ -94,11 +94,11 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
     private Query loadMoreQuery;
     private Query loadFirstQuery;
     private Query lastMessageQuery;
-    private Query loadMessageQuery;
+    private Query loadLastQuery;
     private ChildEventListener loadLiveListener;
     private ChildEventListener loadMoreListener;
     private ChildEventListener loadFirstListener;
-    private ChildEventListener loadMessagesListener;
+    private ChildEventListener loadLastListener;
     private LinearLayout progressLinearLayout;
     private TextView loadMessagesTextView;
     private int loaded = 0;
@@ -116,7 +116,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
     private int previousMessagesAvail;
     private int previousMessagesLeft;
     private boolean atLeast20;
-    private boolean moreMessages;
 
 
     @Override
@@ -169,11 +168,42 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
             }
         });
 
+        loadLiveListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if(dataSnapshot.getKey().equals(lastMessage)) {
+                } else {
+                    Message message = dataSnapshot.getValue(Message.class);
+                    addLiveMessageView(message.user, message.message, message.type, message.color);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
         loadMoreListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (s == null) {
-//                    Log.d(TAG, "First is not taken " + dataSnapshot.getKey());
+                    Log.d(TAG, "First is not taken " + dataSnapshot.getKey());
                     firstMessageReceived = dataSnapshot.getKey();
                 } else {
                     previousMessagesLeft--;
@@ -183,21 +213,21 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                     Message m = dataSnapshot.getValue(Message.class);
                     messagesList.push(m);
 
-                    if (atLeast20 && queryCounter == LOAD_MORE) {
+                    if (atLeast20 && queryCounter == LOAD_MORE - 1) {
+                        queryCounter = 0;
                         previousMessagesAvail = previousMessagesLeft;
                         Log.d(TAG, "loaded more to list we have " + previousMessagesLeft + " messages left");
                         loadMoreQuery.removeEventListener(loadMoreListener);
                         loadMessagesTextView.setVisibility(View.VISIBLE);
 
                     } else if (!atLeast20 && queryCounter == previousMessagesAvail) {
+                        queryCounter = 0;
                         previousMessagesAvail = previousMessagesLeft;
                         Log.d(TAG, "loaded more to list we have " + previousMessagesLeft + " messages left");
                         loadMoreQuery.removeEventListener(loadMoreListener);
                         loadMessagesTextView.setVisibility(View.VISIBLE);
                     }
                 }
-
-
             }
 
             @Override
@@ -233,14 +263,14 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                 Message m = dataSnapshot.getValue(Message.class);
                 addPreviousMessageView(m.user, m.message, m.type, m.color, queryCounter, true);
                 lastMessage = dataSnapshot.getKey();
-                if (atLeast20 && queryCounter == 20 || !atLeast20 && queryCounter == previousMessagesAvail) {
+                if (atLeast20 && queryCounter == LOAD_INITIAL || !atLeast20 && queryCounter == previousMessagesAvail) {
                     Log.d(TAG, "after initla load we have " + previousMessagesLeft + " messages left");
                     queryCounter = 0;
                     loadFirstQuery.removeEventListener(loadFirstListener);
                     //loadmore if there are more
                     if (previousMessagesLeft > 0) {
                         previousMessagesAvail = previousMessagesLeft;
-                        if (previousMessagesLeft - 15 > 0) {
+                        if (previousMessagesLeft - LOAD_MORE > 0) {
                             Log.d(TAG, "querying for 15 more messages");
                             atLeast20 = true;
                             loadMoreQuery = FirebaseDatabase.getInstance().getReference("messages").child(mChannel).orderByKey().limitToLast(LOAD_MORE).endAt(firstMessageReceived);
@@ -248,9 +278,10 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                         } else {
                             Log.d(TAG, "querying for the remaining messages");
                             atLeast20 = false;
-                            loadMoreQuery = FirebaseDatabase.getInstance().getReference("messages").child(mChannel).orderByKey().limitToLast(previousMessagesLeft).endAt(firstMessageReceived);
-                            loadMoreQuery.addChildEventListener(loadMoreListener);
+                            loadLastQuery = FirebaseDatabase.getInstance().getReference("messages").child(mChannel).orderByKey().limitToFirst(previousMessagesLeft);
+                            loadLastQuery.addChildEventListener(loadLastListener);
                         }
+
                     }
                     mScrollView.post(new Runnable() {
                         @Override
@@ -264,6 +295,43 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                     });
                 }
 
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        loadLastListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                previousMessagesLeft--;
+                queryCounter++;
+                Log.d(TAG, "LoadLastListener adding to list " + dataSnapshot.getKey() + " counter is at " + queryCounter + " previousmessagesLeft at " + previousMessagesLeft);
+
+                Message m = dataSnapshot.getValue(Message.class);
+                messagesList.push(m);
+
+                if (queryCounter == previousMessagesAvail) {
+                    loadLastQuery.removeEventListener(loadLastListener);
+                    loadMessagesTextView.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -352,44 +420,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
 
         messagesFirst = 0;
 
-
-
-
-
-
-
-        loadLiveListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.getKey().equals(lastMessage)) {
-                } else {
-                    Message message = dataSnapshot.getValue(Message.class);
-                    addLiveMessageView(message.user, message.message, message.type, message.color);
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-
-
         loadMessagesTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -405,7 +435,7 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                     loadMessagesTextView.setVisibility(View.GONE);
                     Log.d(TAG, "preiousMessagesLeft is: " + previousMessagesLeft);
                     if (previousMessagesLeft > 1) {
-                        if (previousMessagesLeft - 15 > 0) {
+                        if (previousMessagesLeft - LOAD_MORE > 0) {
                             Log.d(TAG, "querying for 15 more messages");
                             atLeast20 = true;
                             loadMoreQuery = FirebaseDatabase.getInstance().getReference("messages").child(mChannel).orderByKey().limitToLast(LOAD_MORE).endAt(firstMessageReceived);
@@ -413,8 +443,8 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                         } else {
                             Log.d(TAG, "querying for the remaining messages");
                             atLeast20 = false;
-                            loadMoreQuery = FirebaseDatabase.getInstance().getReference("messages").child(mChannel).orderByKey().limitToLast(previousMessagesLeft).endAt(firstMessageReceived);
-                            loadMoreQuery.addChildEventListener(loadMoreListener);
+                            loadLastQuery = FirebaseDatabase.getInstance().getReference("messages").child(mChannel).orderByKey().limitToFirst(previousMessagesLeft);
+                            loadLastQuery.addChildEventListener(loadLastListener);
                         }
                     }
 
@@ -423,16 +453,19 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                 }
             }
         });
+
+        liveMessagesQuery = FirebaseDatabase.getInstance().getReference("messages").child(mChannel).limitToLast(1);
+        liveMessagesQuery.addChildEventListener(loadLiveListener);
     }
 
 
     public void loadInitialMessages(int messagesInChannel) {
-        if(messagesInChannel > 20) {
+        if(messagesInChannel > LOAD_INITIAL) {
             Log.d(TAG, "initial load is at least 20");
             loadFirstQuery = FirebaseDatabase.getInstance().getReference("messages").child(mChannel).limitToLast(20);
             loadFirstQuery.addChildEventListener(loadFirstListener);
 
-        } else if(messagesInChannel <= 20) {
+        } else if(messagesInChannel <= LOAD_INITIAL) {
             Log.d(TAG, "initial load is less than 20");
             loadFirstQuery = FirebaseDatabase.getInstance().getReference("messages").child(mChannel).limitToLast(messagesInChannel);
             loadFirstQuery.addChildEventListener(loadFirstListener);
