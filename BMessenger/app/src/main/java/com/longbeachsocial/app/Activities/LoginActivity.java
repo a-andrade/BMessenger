@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
         createUsernameButton = (Button)findViewById(R.id.createUsernameButton);
         getRandomUsernameButton = (Button)findViewById(R.id.anonButton);
 
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         createUsernameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
         getRandomUsernameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserControl.get(getApplicationContext()).setUsername(Util.getAnonString());
+                UserControl.get(getApplication()).setUsername(Util.getAnonString());
                 startNextActivity();
             }
         });
@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    //Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     if(hasUsername)
                         startNextActivity();
 
@@ -123,7 +123,7 @@ public class LoginActivity extends AppCompatActivity implements IRequestListener
         bundle.putString("time", formattedString);
         mFirebaseAnalytics.logEvent("login", bundle);
 
-        Intent i = new Intent(getApplicationContext(), ChannelListActivity.class);
+        Intent i = new Intent(this, ChannelListActivity.class);
         startActivity(i);
         finish();
     }

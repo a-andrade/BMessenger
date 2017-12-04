@@ -34,8 +34,6 @@ public class SettingsFragment extends PreferenceFragment {
 
         mEditText = mEditTextPreference .getEditText();
 
-
-
         mEditTextPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {

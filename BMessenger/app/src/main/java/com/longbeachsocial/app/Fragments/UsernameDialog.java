@@ -26,8 +26,6 @@ import java.util.regex.Pattern;
 
 public class UsernameDialog extends DialogFragment {
 
-    //TODO: fix ui for this fragment
-    private TextView noticeTextView;
     private EditText mDialogEditText;
 
     @Override
@@ -37,10 +35,6 @@ public class UsernameDialog extends DialogFragment {
                 .inflate(R.layout.dialog_signin, null);
         mDialogEditText = (EditText)v.findViewById(R.id.username_EditText);
 
-//        Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(),
-//                "fonts/WireOne.ttf");
-
-//        noticeTextView.setTypeface(custom_font);
 
         final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setView(v)
@@ -116,4 +110,10 @@ public class UsernameDialog extends DialogFragment {
         editor.apply();
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDialogEditText = null;
+    }
 }

@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/messages_loadMore"
                 android:clickable="true"
-                android:visibility="gone"
+                android:visibility="invisible"
                 android:textColor="@color/colorPrimary"
                 android:layout_gravity="top|center"
                 android:gravity="center"/>

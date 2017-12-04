@@ -25,9 +25,6 @@ public class MessageControl {
 
     public void setCallback(Callbacks c) {
         mCallbacks = c;
-        if(mCallbacks != null) {
-            Log.d(TAG, "callbacks set");
-        }
     }
 
     public void removeCallback() {

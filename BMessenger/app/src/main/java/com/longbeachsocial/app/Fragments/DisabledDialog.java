@@ -23,7 +23,6 @@ public class DisabledDialog extends DialogFragment {
         alertDialogBuilder.setTitle(title);
         alertDialogBuilder.setMessage("Long Beach Social is for users on the CSULB campus only. To continue" +
                 " using this service make sure Location is enabled for LB Social and return to campus.");
-        //alertDialogBuilder.setCancelable(false);
 
         return alertDialogBuilder.create();
     }

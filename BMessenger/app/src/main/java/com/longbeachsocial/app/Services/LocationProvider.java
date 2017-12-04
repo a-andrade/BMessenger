@@ -26,8 +26,8 @@ public class LocationProvider implements
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener{
 
-    public abstract interface LocationCallback {
-        public void handleNewLocation(Location location);
+    public interface LocationCallback {
+         void handleNewLocation(Location location);
     }
 
     public static final String TAG = LocationProvider.class.getSimpleName();
@@ -54,7 +54,7 @@ public class LocationProvider implements
 
         // Create the LocationRequest object
         mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
                 .setInterval(6 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(6000); // 1 second, in milliseconds
 
@@ -73,6 +73,8 @@ public class LocationProvider implements
     public void disconnect() {
         if (mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.unregisterConnectionCallbacks(this);
+            mGoogleApiClient.unregisterConnectionFailedListener(this);
             mGoogleApiClient.disconnect();
         }
     }
@@ -85,29 +87,12 @@ public class LocationProvider implements
         }
         else {
             Log.d(TAG, "Requesting Location Updates");
-
-
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
         }
-        //Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-//        if(location == null) {
-//            Log.i(TAG, "location is null");
-//call re
-//        }
-//        else {
-//            Log.d(TAG, location.toString());
-//        }
-//        if (ContextCompat.checkSelfPermission(mContext,
-//                android.Manifest.permission.ACCESS_COARSE_LOCATION )
-//                != PackageManager.PERMISSION_GRANTED ) {
-//            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-//        }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
@@ -144,6 +129,14 @@ public class LocationProvider implements
     public void onLocationChanged(Location location) {
         Log.d(TAG, "Location Changed");
         mLocationCallback.handleNewLocation(location);
+
+    }
+
+    public void onDestroy() {
+        mContext = null;
+        mLocationCallback = null;
+        mGoogleApiClient = null;
+        Log.d(TAG, "Destroying Googleapi and lcoation callback refrerenes");
 
     }
 

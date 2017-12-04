@@ -1,5 +1,6 @@
 package com.longbeachsocial.app.Activities;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 
 import com.longbeachsocial.app.Fragments.ChannelListFragment;
@@ -19,4 +20,8 @@ public class ChannelListActivity extends SingleFragmentActivity {
         return new ChannelListFragment();
     }
 
+    @Override
+    public Context getActivityContext() {
+        return this;
+    }
 }

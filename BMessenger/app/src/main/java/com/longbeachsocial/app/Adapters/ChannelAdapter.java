@@ -81,11 +81,10 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
 
     @Override
     public ChannelAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         View channelView = inflater.inflate(R.layout.item_channel, parent, false);
-        ViewHolder viewHolder = new ViewHolder(context, channelView);
+        ViewHolder viewHolder = new ViewHolder(mContext, channelView);
         return viewHolder;
     }
 
@@ -108,5 +107,9 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
     @Override
     public int getItemCount() {
         return mChannels.size();
+    }
+
+    public void releaseContext() {
+        mContext = null;
     }
 }

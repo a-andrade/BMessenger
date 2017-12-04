@@ -26,15 +26,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-
-import com.google.firebase.database.DatabaseReference;
 import com.longbeachsocial.app.Activities.SettingsActivity;
 import com.longbeachsocial.app.Adapters.ChannelAdapter;
 import com.longbeachsocial.app.Models.Channel;
 import com.longbeachsocial.app.Models.ChannelItem;
 import com.longbeachsocial.app.R;
 import com.longbeachsocial.app.Services.RegisterChannelService;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,7 +39,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.regex.*;
 
@@ -68,28 +64,19 @@ public class ChannelListFragment extends Fragment{
     private ProgressBar progressBar;
     private SearchView searchView = null;
     private SearchView.OnQueryTextListener queryTextListener;
-
-    private FirebaseAnalytics mFirebaseAnalytics;
-    private FirebaseDatabase firebaseDatabase;
-
+    private ChildEventListener basicChannelListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-
-
-
-
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
-
+        Log.d(TAG, "On Create");
         basicChannelQuery = FirebaseDatabase.getInstance().getReference("channels").orderByChild("users");
 
-        basicChannelQuery.addChildEventListener(new ChildEventListener() {
+        basicChannelListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                //Log.d(TAG, "onChildAdded " + dataSnapshot.getKey() + " "  + dataSnapshot.getValue(Channel.class).toString() + " " + dataSnapshot.getKey().toString().equalsIgnoreCase("General"));
+                Log.d(TAG, "onChildAdded " + dataSnapshot.getKey() + " "  + dataSnapshot.getValue(Channel.class).toString() + " " + dataSnapshot.getKey().toString().equalsIgnoreCase("General"));
 
                 progressBar.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
@@ -118,8 +105,6 @@ public class ChannelListFragment extends Fragment{
                     adapter.notifyItemInserted(basicChannelList.size() - 1);
                 }
                 else {
-
-
                     basicChannelList.add(1, new ChannelItem(dataSnapshot.getKey(), dataSnapshot.getValue(Channel.class).getSummary(), dataSnapshot.getValue(Channel.class).getUsers()));
                     adapter.notifyItemInserted(1);
 
@@ -150,8 +135,7 @@ public class ChannelListFragment extends Fragment{
             public void onCancelled(DatabaseError databaseError) {
                 Log.d(TAG, "onCancelled");
             }
-        });
-
+        };
     }
 
     @Override
@@ -175,22 +159,9 @@ public class ChannelListFragment extends Fragment{
         progressBar.setIndeterminate(true);
 
 
-        // Sets the Toolbar to act as the ActionBar for this Activity window.
-        // Make sure the toolbar exists in the activity and is not null
-        //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
-
-        //stickyChannelAdapter = new ChannelAdapter(getContext(), stickyChannelList);
-        //stickyChannelRecyclerView.setAdapter(stickyChannelAdapter);
-        //stickyChannelRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         adapter = new ChannelAdapter(getContext(), basicChannelList);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-//        Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(),  "fonts/WireOne.ttf");
-
-
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -322,7 +293,7 @@ public class ChannelListFragment extends Fragment{
             }
         });
 
-
+        basicChannelQuery.addChildEventListener(basicChannelListener);
 
         return v;
     }
@@ -348,12 +319,19 @@ public class ChannelListFragment extends Fragment{
                     return true;
                 }
                 @Override
-                public boolean onQueryTextSubmit(String query) {
+                public boolean onQueryTextSubmit(String searchQuery) {
+                    final String query = searchQuery;
                     Log.i("onQueryTextSubmit", query);
                     if(basicChannelList.contains(new ChannelItem(query, "", 0))) {
                         Log.d(TAG, "index i s" +  basicChannelList.indexOf(new ChannelItem(query, "", 0)));
-                        recyclerView.scrollToPosition(basicChannelList.indexOf(new ChannelItem(query, "", 0)));
-                        //TODO: Scroll to one off on end
+                        ;
+                        recyclerView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                recyclerView.scrollToPosition(basicChannelList.indexOf(new ChannelItem(query, "", 0)));
+                            }
+                        });
+
                         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
                     }
@@ -366,8 +344,6 @@ public class ChannelListFragment extends Fragment{
             };
             searchView.setOnQueryTextListener(queryTextListener);
         }
-
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -376,25 +352,18 @@ public class ChannelListFragment extends Fragment{
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_item_options) {
             Intent intent = new Intent(getContext(), SettingsActivity.class);
-              startActivity(intent);
+            startActivity(intent);
             // Do Fragment menu item stuff here
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-//    public void showDialog() {
-//        FragmentManager fragmentManager = getFragmentManager();
-//        SettingsDialog newFragment = new SettingsDialog();
-//
-//
-//        // The device is smaller, so show the fragment fullscreen
-//        FragmentTransaction transaction = fragmentManager.beginTransaction();
-//        // For a little polish, specify a transition animation
-//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//        // To make it fullscreen, use the 'content' root view as the container
-//        // for the fragment, which is always the root view for the activity
-//        transaction.add(R.layout.fragment_channel_list, newFragment).addToBackStack(null).commit();
-//    }
 
+    @Override
+    public void onDestroy() {
+        basicChannelQuery.removeEventListener(basicChannelListener);
+        adapter.releaseContext();
+        super.onDestroy();
+    }
 }

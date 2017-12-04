@@ -1,5 +1,6 @@
 package com.longbeachsocial.app.Activities;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 
 import com.longbeachsocial.app.Fragments.MessagingFragment;
@@ -10,21 +11,14 @@ import com.longbeachsocial.app.Fragments.MessagingFragment;
 
 public class MessagingActivity  extends SingleFragmentActivity {
 
-
     @Override
     public Fragment createFragment() {
         return new MessagingFragment();
     }
 
-
-
     @Override
-    public void onDestroy() {
-        finish();
-        super.onDestroy();
+    public Context getActivityContext() {
+        return this;
     }
-
-
-
 
 }

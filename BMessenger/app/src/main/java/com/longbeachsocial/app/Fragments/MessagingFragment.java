@@ -52,15 +52,7 @@ import com.longbeachsocial.app.Services.ChannelRemoveUserService;
 import com.longbeachsocial.app.Utilities.Util;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
-
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import android.support.v13.view.inputmethod.EditorInfoCompat;
@@ -93,7 +85,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
     private Query liveMessagesQuery;
     private Query loadMoreQuery;
     private Query loadFirstQuery;
-    private Query lastMessageQuery;
     private Query loadLastQuery;
     private ChildEventListener loadLiveListener;
     private ChildEventListener loadMoreListener;
@@ -101,17 +92,13 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
     private ChildEventListener loadLastListener;
     private LinearLayout progressLinearLayout;
     private TextView loadMessagesTextView;
-    private int loaded = 0;
-    private int loadedCounter = 0;
-    private String lastMessageReceived;
     private String lastMessage;
     private String firstMessageReceived;
     private LinkedBlockingDeque<Message> messagesList;
     private int queryCounter;
-    private long messagesToLoad = 0;
     private final int LOAD_MORE = 15;
     private final int LOAD_INITIAL = 20;
-    private int messagesFirst;
+    private boolean skippedFirst = false;
 
     private int previousMessagesAvail;
     private int previousMessagesLeft;
@@ -133,14 +120,17 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
 
         messagesList = new LinkedBlockingDeque<>();
 
-        FirebaseDatabase.getInstance().getReference("messageCounters").child(mChannel).addListenerForSingleValueEvent(new ValueEventListener() {
+        final Query counterQuery;
+        counterQuery = FirebaseDatabase.getInstance().getReference("messageCounters").child(mChannel);
+        counterQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() == null) {
                     Log.d(TAG, "value is null");
                     progressLinearLayout.setVisibility(View.GONE);
                     mScrollView.setVisibility(View.VISIBLE);
-
+                    loadMessagesTextView.setVisibility(View.GONE);
+                    skippedFirst = true;
                 } else {
                     long val = (long) dataSnapshot.getValue();
                     previousMessagesAvail = (int) val;
@@ -152,12 +142,16 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                     else {
                         progressLinearLayout.setVisibility(View.GONE);
                         mScrollView.setVisibility(View.VISIBLE);
+                        skippedFirst = true;
+                        loadMessagesTextView.setVisibility(View.GONE);
                     }
 
                     if (previousMessagesAvail >= 20)
                         atLeast20 = true;
-                    else
+                    else {
                         atLeast20 = false;
+                        loadMessagesTextView.setVisibility(View.GONE);
+                    }
                 }
 
             }
@@ -171,11 +165,18 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
         loadLiveListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.getKey().equals(lastMessage)) {
-                } else {
+                if(!skippedFirst)
+                    skippedFirst = true;
+                else {
                     Message message = dataSnapshot.getValue(Message.class);
                     addLiveMessageView(message.user, message.message, message.type, message.color);
                 }
+//                Log.d(TAG, "livelistener " + lastMessage + " " + dataSnapshot.getKey());
+//                if(dataSnapshot.getKey().equals(lastMessage)) {
+//                    Log.d(TAG, "onLiveListener " + dataSnapshot.getKey() + " " + lastMessage);
+//                } else {
+//
+//                }
             }
 
             @Override
@@ -214,6 +215,7 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                     messagesList.push(m);
 
                     if (atLeast20 && queryCounter == LOAD_MORE - 1) {
+
                         queryCounter = 0;
                         previousMessagesAvail = previousMessagesLeft;
                         Log.d(TAG, "loaded more to list we have " + previousMessagesLeft + " messages left");
@@ -261,10 +263,11 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                 Log.d(TAG, "LoadFirstListener adding to list " + dataSnapshot.getKey() + " counter is at " + queryCounter + " previousmessagesLeft at " + previousMessagesLeft);
 
                 Message m = dataSnapshot.getValue(Message.class);
-                addPreviousMessageView(m.user, m.message, m.type, m.color, queryCounter, true);
+                addPreviousMessageView(m.user, m.message, m.type, m.color, queryCounter, false);
                 lastMessage = dataSnapshot.getKey();
                 if (atLeast20 && queryCounter == LOAD_INITIAL || !atLeast20 && queryCounter == previousMessagesAvail) {
-                    Log.d(TAG, "after initla load we have " + previousMessagesLeft + " messages left");
+                    Log.d(TAG, "after initial load we have " + previousMessagesLeft + " messages left");
+                    Log.d(TAG, "last message is " + lastMessage);
                     queryCounter = 0;
                     loadFirstQuery.removeEventListener(loadFirstListener);
                     //loadmore if there are more
@@ -282,19 +285,19 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                             loadLastQuery.addChildEventListener(loadLastListener);
                         }
 
+
                     }
+                    progressLinearLayout.setVisibility(View.GONE);
+                    mScrollView.setVisibility(View.VISIBLE);
+                    //mScrollView.fullScroll(View.FOCUS_DOWN);
                     mScrollView.post(new Runnable() {
                         @Override
                         public void run() {
                             mScrollView.fullScroll(View.FOCUS_DOWN);
-
-                            progressLinearLayout.setVisibility(View.GONE);
-                            mScrollView.setVisibility(View.VISIBLE);
-
                         }
                     });
-                }
 
+                }
             }
 
             @Override
@@ -418,7 +421,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
             }
         });
 
-        messagesFirst = 0;
 
         loadMessagesTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -456,6 +458,7 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
 
         liveMessagesQuery = FirebaseDatabase.getInstance().getReference("messages").child(mChannel).limitToLast(1);
         liveMessagesQuery.addChildEventListener(loadLiveListener);
+
     }
 
 
@@ -572,7 +575,7 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                     mLinearLayout.addView(linearLayout,viewIndex);
                     ImageView imageView = linearLayout.findViewById(R.id.message_ImageView);
 
-                    Glide.with(getActivity())
+                    Glide.with(getContext())
                             .load(message)
                             .into(imageView);
 
@@ -610,7 +613,7 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
 
                     ImageView imageView = linearLayout.findViewById(R.id.message_ImageView);
 
-                    Glide.with(getActivity())
+                    Glide.with(getContext())
                             .load(message)
                             .into(imageView);
 
@@ -633,23 +636,22 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
 
                     linearLayout.setLayoutParams(params);
                     mLinearLayout.addView(linearLayout, viewIndex);
-
                 }
-
             }
             else
                 return;
         }
 
-        if(focusTop) {
-            mScrollView.post(new Runnable() {
-                @Override
-                public void run() {
-                    //mScrollView.fullScroll(View.FOCUS_UP);
-                }
-            });
-
-        }
+//        if(!focusTop) {
+//            Log.d(TAG, "not focusing top, scroll down after view added" );
+//            mScrollView.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mScrollView.fullScroll(View.FOCUS_DOWN);
+//                }
+//            });
+//
+//        }
     }
 
     private void addLiveMessageView(String user, String message, String type, String color) {
@@ -684,16 +686,10 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                     mLinearLayout.addView(linearLayout);
                     ImageView imageView = linearLayout.findViewById(R.id.message_ImageView);
 
-                    Glide.with(getActivity())
+                    Glide.with(getContext())
                             .load(message)
                             .into(imageView);
 
-                    mScrollView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mScrollView.fullScroll(View.FOCUS_DOWN);
-                        }
-                    });
 
 
                 }
@@ -712,12 +708,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                     linearLayout.setLayoutParams(params);
                     mLinearLayout.addView(linearLayout);
 
-                    mScrollView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mScrollView.fullScroll(View.FOCUS_DOWN);
-                        }
-                    });
                 }
 
             }
@@ -735,7 +725,7 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
 
                     ImageView imageView = linearLayout.findViewById(R.id.message_ImageView);
 
-                    Glide.with(getActivity())
+                    Glide.with(getContext())
                             .load(message)
                             .into(imageView);
 
@@ -743,12 +733,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                     linearLayout.setLayoutParams(params);
                     mLinearLayout.addView(linearLayout);
 
-                    mScrollView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mScrollView.fullScroll(View.FOCUS_DOWN);
-                        }
-                    });
                 }
 
             }
@@ -764,13 +748,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
 
                     linearLayout.setLayoutParams(params);
                     mLinearLayout.addView(linearLayout);
-
-                    mScrollView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mScrollView.fullScroll(View.FOCUS_DOWN);
-                        }
-                    });
                 }
 
             }
@@ -784,8 +761,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                 mScrollView.fullScroll(View.FOCUS_DOWN);
             }
         });
-
-
     }
 
     private boolean onCommitContentInternal(InputContentInfoCompat inputContentInfo, int flags) {
@@ -800,7 +775,7 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
         }
 
         if(inputContentInfo.getLinkUri() == null) {
-            Toast.makeText(getActivity(), "This text field does not support that media", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "This text field does not support that media", Toast.LENGTH_SHORT).show();
         }
         else
             sendMessage(inputContentInfo.getLinkUri().toString(), Util.MESSAGE_MULTIMEDIA);
@@ -883,11 +858,10 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
         super.onPause();
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        liveMessagesQuery.removeEventListener(loadLiveListener);
     }
 
 }
