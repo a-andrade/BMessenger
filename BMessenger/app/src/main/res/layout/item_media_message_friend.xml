@@ -20,7 +20,6 @@
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
         android:maxWidth="260dp"
-        android:background="@drawable/messagebubble_friend"
         />
 </LinearLayout>
 

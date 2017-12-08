@@ -32,7 +32,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
@@ -43,7 +42,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.longbeachsocial.app.Activities.SettingsActivity;
-import com.longbeachsocial.app.Manager.MessageControl;
 import com.longbeachsocial.app.Models.Message;
 import com.longbeachsocial.app.R;
 import com.longbeachsocial.app.Manager.UserControl;
@@ -70,7 +68,7 @@ import static com.longbeachsocial.app.Utilities.Util.RANDOM;
  * Created by uli on 12/5/2016.
  */
 
-public class MessagingFragment extends Fragment  implements MessageControl.Callbacks, InputConnectionCompat.OnCommitContentListener {
+public class MessagingFragment extends Fragment implements InputConnectionCompat.OnCommitContentListener {
     public static  final String TAG = "MessagingFragment";
     private EditText mEditText;
     private Button mSendButton;
@@ -109,8 +107,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        MessageControl leagueManager = MessageControl.get(getActivity());
-        leagueManager.setCallback(this);
         queryCounter = 0;
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -284,8 +280,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                             loadLastQuery = FirebaseDatabase.getInstance().getReference("messages").child(mChannel).orderByKey().limitToFirst(previousMessagesLeft);
                             loadLastQuery.addChildEventListener(loadLastListener);
                         }
-
-
                     }
                     progressLinearLayout.setVisibility(View.GONE);
                     mScrollView.setVisibility(View.VISIBLE);
@@ -578,8 +572,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
                     Glide.with(getContext())
                             .load(message)
                             .into(imageView);
-
-
                 }
 
             }
@@ -641,17 +633,6 @@ public class MessagingFragment extends Fragment  implements MessageControl.Callb
             else
                 return;
         }
-
-//        if(!focusTop) {
-//            Log.d(TAG, "not focusing top, scroll down after view added" );
-//            mScrollView.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    mScrollView.fullScroll(View.FOCUS_DOWN);
-//                }
-//            });
-//
-//        }
     }
 
     private void addLiveMessageView(String user, String message, String type, String color) {
